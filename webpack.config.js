@@ -20,7 +20,7 @@ module.exports =
 		alias:
 		{
 			'~/src':     path.resolve (__dirname, './src'),
-			'~/init':    path.resolve (__dirname, './src/init'),
+			'~/core':    path.resolve (__dirname, './src/core'),
 			'~/utility': path.resolve (__dirname, './src/utility'),
 		}
 	},

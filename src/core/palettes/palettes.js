@@ -14,7 +14,7 @@ const palettes = Object.freeze ({ NTSC, PAL, SECAM });
  *
  * @returns {integer[]|null} RGBA color array, or null if invalid color index/palette.
  */
-const getColor = ( paletteName = 'NTSC', colorIndex ) =>
+const getColor = ( paletteName, colorIndex ) =>
 {
 	if ( !has (palettes, paletteName) )
 	{
@@ -38,7 +38,7 @@ const getColor = ( paletteName = 'NTSC', colorIndex ) =>
  *
  * @returns {integer}
  */
-const getMaxColors = ( paletteName = 'NTSC' ) =>
+const getMaxColors = ( paletteName ) =>
 {
 	if ( !has (palettes, paletteName) )
 	{
@@ -49,5 +49,6 @@ const getMaxColors = ( paletteName = 'NTSC' ) =>
 };
 
 
-export default palettes;
 export { getColor, getMaxColors };
+
+export default palettes;

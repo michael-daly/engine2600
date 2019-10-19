@@ -2,7 +2,8 @@ import Playfield    from '~/playfield/Playfield.js';
 import EventEmitter from '~/utility/classes/EventEmitter.js';
 import createCanvas from '~/utility/createCanvas.js';
 
-import { getColor } from '~/palettes/palettes.js';
+import { getColor }  from '~/palettes/palettes.js';
+import { TICK_RATE } from '~/core/constants.js';
 
 import { PLAYFIELD_X, PLAYFIELD_Y } from '~/playfield/constants.js';
 
@@ -24,14 +25,15 @@ class MakerApp
 		this.canvas  = canvas;
 		this.context = canvas.getContext ('2d');
 
-		// For hooking into the update loop, render loop, etc.
+		// For hooking into the update loop, etc.
 		this.events = new EventEmitter ();
 
-		/* These are set later. */
-
+		// The playfield this game uses.  Use addPlayfield() to add one.
 		this.playfield = null;
-		this.player1   = null;
-		this.player2   = null;
+
+		// Player objects 1 and 2.  The Atari 2600 technically only had support for two sprites.
+		this.player1 = null;
+		this.player2 = null;
 
 		// Name of the color palette we'll use for the playfield and all sprites.
 		this.palette = palette;
@@ -39,14 +41,23 @@ class MakerApp
 		// Non-playfield background color.
 		this.backgroundColor = 0;
 
-		// Pre-bind the render function so we don't rebind it every single loop.
-		this.renderBound = this.render.bind (this);
+		// Pre-bind the update method so we don't rebind it every single loop.
+		this._updateBound = this.update.bind (this);
 
-		// The render loop will only run if this is set to true.
-		this.isRendering = true;
+		// Initialize last update time.
+		this._lastUpdateTime = performance.now ();
+
+		// Pre-bind the render method so we don't rebind it every single loop.
+		this._renderBound = this.render.bind (this);
+
+		// Neither update() nor render() will run if this is false.
+		this.isRunning = true;
 
 		// If this is true, this instance has been disposed of -- don't try to use it.
 		this.isDeleted = false;
+
+		// Start the update loop.
+		this.update ();
 
 		// Start the render loop.
 		this.render ();
@@ -57,8 +68,16 @@ class MakerApp
 	 */
 	delete ()
 	{
+		clearTimeout (this._updateTimeout);
+		cancelAnimationFrame (this._frameRequest);
+
 		this.canvas.remove ();
 		this.events.clear ();
+
+		if ( this.playfield !== null )
+		{
+			this.playfield.delete ();
+		}
 
 		delete this.parent;
 		delete this.canvas;
@@ -68,8 +87,11 @@ class MakerApp
 		delete this.playfield;
 		delete this.player1;
 		delete this.player2;
-		delete this.renderBound;
-		delete this.isRendering;
+		delete this._updateBound;
+		delete this._updateTimeout;
+		delete this._renderBound;
+		delete this._frameRequest;
+		delete this.isRunning;
 
 		this.isDeleted = true;
 	}
@@ -83,11 +105,30 @@ class MakerApp
 	}
 
 	/**
-	 * Main render loop -- only runs if isRendering is set to true.
+	 * Main update loop -- only runs if isRunning is set to true.
+	 */
+	update ()
+	{
+		if ( !this.isRunning )
+		{
+			return;
+		}
+
+		const time  = performance.now ();
+		const delta = time - this._lastUpdateTime;
+
+		this.events.emit ('update', { time, delta });
+
+		this._lastUpdateTime = performance.now ();
+		this._updateTimeout  = setTimeout (this._updateBound, TICK_RATE);
+	}
+
+	/**
+	 * Main render loop -- only runs if isRunning is set to true.
 	 */
 	render ()
 	{
-		if ( !this.isRendering )
+		if ( !this.isRunning )
 		{
 			return;
 		}
@@ -105,7 +146,7 @@ class MakerApp
 
 		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't rebind
 		// the method every single loop.
-		requestAnimationFrame (this.renderBound);
+		this._frameRequest = requestAnimationFrame (this._renderBound);
 	}
 
 	/**

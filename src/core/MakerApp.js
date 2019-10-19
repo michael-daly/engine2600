@@ -1,4 +1,5 @@
-import Playfield from '~/core/Playfield.js';
+import Playfield    from '~/core/Playfield.js';
+import { getColor } from '~/core/palettes/palettes.js';
 
 import { CANVAS_WIDTH, CANVAS_HEIGHT, DEFAULT_PF_X, DEFAULT_PF_Y } from '~/core/constants.js';
 
@@ -37,6 +38,8 @@ class MakerApp
 		this.scale   = scale;
 
 		this.palette = palette;
+
+		this.backgroundColor = 0;
 
 		/* These are set later. */
 
@@ -153,6 +156,11 @@ class MakerApp
 	get height ()
 	{
 		return this.canvas.height;
+	}
+
+	set backgroundColor ( colorIndex )
+	{
+		this.canvas.style.background = `rgba(${getColor (this.palette, colorIndex)})`;
 	}
 }
 

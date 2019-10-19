@@ -1,6 +1,6 @@
 import Playfield from '~/core/Playfield.js';
 
-import { CANVAS_WIDTH, CANVAS_HEIGHT, PF_OFFSET_X, PF_OFFSET_Y } from '~/core/constants.js';
+import { CANVAS_WIDTH, CANVAS_HEIGHT, DEFAULT_PF_X, DEFAULT_PF_Y } from '~/core/constants.js';
 
 
 /**
@@ -44,6 +44,9 @@ class MakerApp
 		this.player1   = null;
 		this.player2   = null;
 
+		this.playfieldPosX = DEFAULT_PF_X;
+		this.playfieldPosY = DEFAULT_PF_Y;
+
 		// MakerApp has been disposed of -- don't try to use it if this is true.
 		this.isDeleted = false;
 
@@ -67,7 +70,12 @@ class MakerApp
 		delete this.parent;
 		delete this.canvas;
 		delete this.context;
+		delete this.scale;
 		delete this.playfield;
+		delete this.player1;
+		delete this.player2;
+		delete this.playfieldPosX;
+		delete this.playfieldPosY;
 		delete this.renderBound;
 		delete this.isRendering;
 
@@ -100,7 +108,7 @@ class MakerApp
 		if ( playfield !== null )
 		{
 			// Draw the playfield, if it exists.
-			playfield.render (this.context, PF_OFFSET_X, PF_OFFSET_Y);
+			playfield.render (this.context, this.playfieldPosX, this.playfieldPosY);
 		}
 
 		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't rebind

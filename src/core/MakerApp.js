@@ -1,8 +1,10 @@
 import Playfield    from '~/playfield/Playfield.js';
+import EventEmitter from '~/utility/classes/EventEmitter.js';
+import createCanvas from '~/utility/createCanvas.js';
+
 import { getColor } from '~/palettes/palettes.js';
 
-import { CANVAS_WIDTH, CANVAS_HEIGHT } from '~/core/constants.js';
-import { PLAYFIELD_X, PLAYFIELD_Y }    from '~/playfield/constants.js';
+import { PLAYFIELD_X, PLAYFIELD_Y } from '~/playfield/constants.js';
 
 
 /**
@@ -17,30 +19,13 @@ class MakerApp
 	 */
 	constructor ( elementID, scale = 2.0, palette = 'NTSC' )
 	{
-		/* Create the canvas we will render everything on. */
-
-		const canvas  = document.createElement ('canvas');
-		canvas.width  = CANVAS_WIDTH;
-		canvas.height = CANVAS_HEIGHT;
-
-		/* Scale the canvas up, making sure it's not blurry. */
-
-		canvas.style['image-rendering']  = 'crisp-edges';
-		canvas.style['transform-origin'] = 'left top';
-		canvas.style['transform']        = `scale(${scale})`;
-
-		/* Finally, append the canvas to our parent element. */
-
-		this.parent = document.getElementById (elementID);
-		this.parent.appendChild (canvas);
+		const canvas = createCanvas (elementID, scale);
 
 		this.canvas  = canvas;
 		this.context = canvas.getContext ('2d');
-		this.scale   = scale;
 
-		this.palette = palette;
-
-		this.backgroundColor = 0;
+		// For hooking into the update loop, render loop, etc.
+		this.events = new EventEmitter ();
 
 		/* These are set later. */
 
@@ -48,14 +33,20 @@ class MakerApp
 		this.player1   = null;
 		this.player2   = null;
 
-		// MakerApp has been disposed of -- don't try to use it if this is true.
-		this.isDeleted = false;
+		// Name of the color palette we'll use for the playfield and all sprites.
+		this.palette = palette;
+
+		// Non-playfield background color.
+		this.backgroundColor = 0;
 
 		// Pre-bind the render function so we don't rebind it every single loop.
 		this.renderBound = this.render.bind (this);
 
 		// The render loop will only run if this is set to true.
 		this.isRendering = true;
+
+		// If this is true, this instance has been disposed of -- don't try to use it.
+		this.isDeleted = false;
 
 		// Start the render loop.
 		this.render ();
@@ -67,11 +58,13 @@ class MakerApp
 	delete ()
 	{
 		this.canvas.remove ();
+		this.events.clear ();
 
 		delete this.parent;
 		delete this.canvas;
 		delete this.context;
 		delete this.scale;
+		delete this.events;
 		delete this.playfield;
 		delete this.player1;
 		delete this.player2;
@@ -154,6 +147,11 @@ class MakerApp
 	get height ()
 	{
 		return this.canvas.height;
+	}
+
+	set scale ( scale )
+	{
+		this.canvas.style['transform'] = `scale(${scale})`;
 	}
 
 	set backgroundColor ( colorIndex )

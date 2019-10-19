@@ -16,8 +16,6 @@ const PF_WIDTH_PIXELS = PF_WIDTH_TILES * TILE_WIDTH;
 // (There's no constant for the playfields' height in tiles, since that varies).
 const PF_HEIGHT_PIXELS = 192;
 
-const MAX_COLORS = 128;
-
 
 const constants =
 {
@@ -31,8 +29,6 @@ const constants =
 	PF_WIDTH_TILES,
 	PF_WIDTH_PIXELS,
 	PF_HEIGHT_PIXELS,
-
-	MAX_COLORS,
 };
 
 

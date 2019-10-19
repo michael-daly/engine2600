@@ -31,5 +31,22 @@ const getColor = ( paletteName = 'NTSC', colorIndex ) =>
 	return palette[colorIndex];
 };
 
+/**
+ * Get the max number of colors in a palette.
+ *
+ * @param {string} paletteName - Available palettes: NTSC, PAL, and SECAM.
+ *
+ * @returns {integer}
+ */
+const getMaxColors = ( paletteName = 'NTSC' ) =>
+{
+	if ( !has (palettes, paletteName) )
+	{
+		return -1;
+	}
 
-export { getColor };
+	return palettes[paletteName].length;
+};
+
+
+export { getColor, getMaxColors };

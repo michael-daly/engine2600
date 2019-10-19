@@ -11,4 +11,4 @@ const SECAM =
 ];
 
 
-export default SECAM;
+export default Object.freeze (SECAM);

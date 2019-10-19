@@ -119,4 +119,4 @@ const PAL =
 ];
 
 
-export default PAL;
+export default Object.freeze (PAL);

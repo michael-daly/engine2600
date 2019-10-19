@@ -162,4 +162,4 @@ const NTSC =
 ];
 
 
-export default NTSC;
+export default Object.freeze (NTSC);

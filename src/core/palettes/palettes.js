@@ -1,11 +1,10 @@
 import has from 'has';
 
-import NTSC       from '~/core/palettes/NTSC.js';
-import PAL        from '~/core/palettes/PAL.js';
-import SECAM      from '~/core/palettes/SECAM.js';
-import deepFreeze from '~/utility/deepFreeze.js';
+import NTSC  from '~/palettes/NTSC.js';
+import PAL   from '~/palettes/PAL.js';
+import SECAM from '~/palettes/SECAM.js';
 
-const palettes = deepFreeze ({ NTSC, PAL, SECAM });
+const palettes = Object.freeze ({ NTSC, PAL, SECAM });
 
 /**
  * Get an RGBA color array at an index in a specific palette.

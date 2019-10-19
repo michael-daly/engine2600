@@ -1,3 +1,11 @@
+/**
+ * Sets an image data pixel color at (x, y).
+ *
+ * @param {ImageData} imageData  - The ImageData instance we want to set the pixel color of.
+ * @param {integer}   x
+ * @param {integer}   y
+ * @param {integer[]} colorArray - An [R, G, B, A] color array.
+ */
 const setPixel = ( imageData, x, y, colorArray ) =>
 {
 	const { data } = imageData;

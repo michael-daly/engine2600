@@ -1,12 +1,19 @@
 const CANVAS_WIDTH  = 320;
 const CANVAS_HEIGHT = 226;
 
-const PIXEL_WIDTH = 2;  // Pixels' width for Atari 2600 are double their height.
+// Pixels' width for Atari 2600 are double their height.
+const PIXEL_WIDTH = 2;
 
 const TILE_WIDTH = 4 * PIXEL_WIDTH;
 
-const PF_WIDTH_TILES   = 36;
-const PF_WIDTH_PIXELS  = PF_WIDTH_TILES * TILE_WIDTH;
+// The playfields' width in tiles.
+const PF_WIDTH_TILES = 36;
+
+// The playfields' width in pixels.
+const PF_WIDTH_PIXELS = PF_WIDTH_TILES * TILE_WIDTH;
+
+// The playfields' height in pixels.
+// (There's no constant for the playfields' height in tiles, since that varies).
 const PF_HEIGHT_PIXELS = 192;
 
 const MAX_COLORS = 128;

@@ -15,8 +15,16 @@ import
 from '~/core/constants.js';
 
 
+/**
+ * Used for storing/updating playfield data for the game.
+ */
 class Playfield
 {
+	/**
+	 * @param {integer} tileHeight - The height of a playfield tile -- must be a divisor of 192.
+	 * @param {integer} bgColor    - Default row background color index.
+	 * @param {integer} tileColor  - Default row tile color index.
+	 */
 	constructor ( tileHeight = 16, bgColor = 0, tileColor = 7 )
 	{
 		if ( PF_HEIGHT_PIXELS % tileHeight !== 0 )
@@ -24,87 +32,147 @@ class Playfield
 			throw new Error (`\`tileHeight\` must be a divisor of ${PF_HEIGHT_PIXELS}`);
 		}
 
+		const width  = PF_WIDTH_TILES;
 		const height = PF_HEIGHT_PIXELS / tileHeight;
 
+		// Initialize tile array with the all tiles set to 0, and all the colors set to their defaults.
 		this.tiles = createArray (height, () =>
 		{
-			return { bgColor, tileColor, rowTiles: createArray (PF_WIDTH_TILES, () => 0) };
+			return { bgColor, tileColor, rowTiles: createArray (width, () => 0) };
 		});
 
-		this.height     = height;
+		// Static property -- don't change it or you'll break everything.
 		this.tileHeight = tileHeight;
-		this.imageData  = new ImageData (PF_WIDTH_PIXELS, PF_HEIGHT_PIXELS);
-		this.isDeleted  = false;
 
+		// Playfield width and height in tiles.
+		this.width  = width;
+		this.height = height;
+
+		// Playfield has been disposed of -- don't try to use it if this is true.
+		this.isDeleted = false;
+
+		// Used for drawing the playfield on a canvas.
+		this.imageData = new ImageData (PF_WIDTH_PIXELS, PF_HEIGHT_PIXELS);
+
+		// Initialize tile image data.
 		this.updateAllTiles ();
 	}
 
+	/**
+	 * Deletes all properties and sets isDeleted to true.
+	 */
 	delete ()
 	{
 		delete this.tiles;
-		delete this.height;
 		delete this.tileHeight;
+		delete this.height;
 		delete this.imageData;
 
 		this.isDeleted = true;
 	}
 
+	/**
+	 * Reset all tiles to 0.
+	 */
 	clearTiles ()
 	{
-		const { height } = this;
+		const { height, width } = this;
 
 		for ( let y = 0;  y < height;  y++ )
 		{
-			this.tiles[y].rowTiles = createArray (PF_WIDTH_TILES, () => 0);
+			const { rowTiles } = this.tiles[y];
+
+			for ( let x = 0;  x < width;  x++ )
+			{
+				rowTiles[x] = 0;
+			}
 		}
+
+		this.updateAllTiles ();
 	}
 
+	/**
+	 * Get the tile bit at (x, y).
+	 *
+	 * @param {integer} x
+	 * @param {integer} y
+	 *
+	 * @returns {0|1}
+	 */
 	getTile ( x, y )
 	{
 		return this.tiles[y].rowTiles[x];
 	}
 
+	/**
+	 * Get row background color index.
+	 *
+	 * @param   {integer} rowIndex
+	 * @returns {integer}
+	 */
 	getBackgroundColor ( rowIndex )
 	{
 		return this.tiles[rowIndex].bgColor;
 	}
 
+	/**
+	 * Get row tile color index.
+	 *
+	 * @param   {integer} rowIndex
+	 * @returns {integer}
+	 */
 	getTileColor ( rowIndex )
 	{
 		return this.tiles[rowIndex].tileColor;
 	}
 
+	/**
+	 * Set the tile bit at (x, y).
+	 *
+	 * @param {integer} x
+	 * @param {integer} y
+	 * @param {0|1}     bool - 0 for no tile, 1 for tile.
+	 */
 	setTile ( x, y, bool )
 	{
-		if ( x < 0  ||  x >= PF_WIDTH_TILES )
+		if ( x < 0  ||  x >= this.width )
 		{
 			return;
 		}
 
-		const { tiles } = this;
-
-		if ( y < 0  ||  y >= tiles.length )
+		if ( y < 0  ||  y >= this.height )
 		{
 			return;
 		}
 
-		tiles[y].rowTiles[x] = +(!!bool);
+		this.tiles[y].rowTiles[x] = +(!!bool);
 
 		this.updateTile (x, y);
 	}
 
+	/**
+	 * @param {integer} rowIndex
+	 * @param {integer} colorIndex
+	 */
 	setBackgroundColor ( rowIndex, colorIndex )
 	{
 		this.tiles[rowIndex].bgColor = colorIndex;
 		this.updateRow (rowIndex);
 	}
 
+	/**
+	 * @param {integer} rowIndex
+	 * @param {integer} colorIndex
+	 */
 	setTileColor ( rowIndex, colorIndex )
 	{
 		this.tiles[rowIndex].tileColor = colorIndex;
 		this.updateRow (rowIndex);
 	}
 
+	/**
+	 * Update the image data for all tiles.
+	 */
 	updateAllTiles ()
 	{
 		const { height } = this;
@@ -115,16 +183,27 @@ class Playfield
 		}
 	}
 
+	/**
+	 * Update the image data for all tiles in a row.
+	 *
+	 * @param {integer} rowIndex
+	 */
 	updateRow ( rowIndex )
 	{
-		const row = this.tiles[rowIndex];
+		const { width } = this;
 
-		for ( let x = 0;  x < PF_WIDTH_TILES;  x++ )
+		for ( let x = 0;  x < width;  x++ )
 		{
 			this.updateTile (x, rowIndex);
 		}
 	}
 
+	/**
+	 * Update the image data for a tile at (x, y).
+	 *
+	 * @param {integer} x
+	 * @param {integer} y
+	 */
 	updateTile ( x, y )
 	{
 		const tileColor = getColor (this.getTileColor (y));

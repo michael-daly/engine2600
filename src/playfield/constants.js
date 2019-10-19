@@ -14,8 +14,8 @@ const PF_WIDTH_PIXELS = PF_WIDTH_TILES * TILE_WIDTH;
 const PF_HEIGHT_PIXELS = 192;
 
 // Playfield positions
-const PLAYFIELD_X = 0;
-const PLAYFIELD_Y = 4;
+const DEFAULT_PF_X = 0;
+const DEFAULT_PF_Y = 4;
 
 
 export
@@ -26,6 +26,6 @@ export
 	PF_WIDTH_PIXELS,
 	PF_HEIGHT_PIXELS,
 
-	PLAYFIELD_X,
-	PLAYFIELD_Y,
+	DEFAULT_PF_X,
+	DEFAULT_PF_Y,
 };

@@ -1,21 +1,23 @@
 import
 {
-	PF_TILE_WIDTH,
+	TILE_WIDTH,
+
 	PF_WIDTH_TILES,
-	PF_HEIGHT_PIXELS,
 	PF_WIDTH_PIXELS,
+	PF_HEIGHT_PIXELS,
 
 	MAX_COLORS,
 }
 from '~/core/constants.js';
 
+import { getColor }    from '~/core/palettes/palettes.js';
 import { setPixel }    from '~/utility/imageData.js';
 import { createArray } from '~/utility/createArray.js';
 
 
 class Playfield
 {
-	constructor ( tileHeight = 8 )
+	constructor ( tileHeight = 16, bgColor = 0, tileColor = 7 )
 	{
 		if ( PF_HEIGHT_PIXELS % tileHeight !== 0 )
 		{
@@ -26,13 +28,15 @@ class Playfield
 
 		this.tiles = createArray (height, () =>
 		{
-			return { rowColor: 0, rowTiles: createArray (PF_WIDTH_TILES, () => 0) };
+			return { bgColor, tileColor, rowTiles: createArray (PF_WIDTH_TILES, () => 0) };
 		});
 
 		this.height     = height;
 		this.tileHeight = tileHeight;
 		this.imageData  = new ImageData (PF_WIDTH_PIXELS, PF_HEIGHT_PIXELS);
 		this.isDeleted  = false;
+
+		this.updateAllTiles ();
 	}
 
 	delete ()
@@ -55,6 +59,21 @@ class Playfield
 		}
 	}
 
+	getTile ( x, y )
+	{
+		return this.tiles[y].rowTiles[x];
+	}
+
+	getBackgroundColor ( rowIndex )
+	{
+		return this.tiles[rowIndex].bgColor;
+	}
+
+	getTileColor ( rowIndex )
+	{
+		return this.tiles[rowIndex].tileColor;
+	}
+
 	setTile ( x, y, bool )
 	{
 		if ( x < 0  ||  x >= PF_WIDTH_TILES )
@@ -70,21 +89,62 @@ class Playfield
 		}
 
 		tiles[y].rowTiles[x] = +(!!bool);
+
+		this.updateTile (x, y);
 	}
 
-	setRowColor ( rowIndex, colorIndex )
+	setBackgroundColor ( rowIndex, colorIndex )
 	{
-		if ( colorIndex < 0  ||  colorIndex >= MAX_COLORS )
-		{
-			return;
-		}
+		this.tiles[rowIndex].bgColor = colorIndex;
+		this.updateRow (rowIndex);
+	}
 
-		if ( rowIndex < 0  ||  rowIndex >= PF_WIDTH_TILES )
-		{
-			return;
-		}
+	setTileColor ( rowIndex, colorIndex )
+	{
+		this.tiles[rowIndex].tileColor = colorIndex;
+		this.updateRow (rowIndex);
+	}
 
-		this.tiles[rowIndex].rowColor = colorIndex;
+	updateAllTiles ()
+	{
+		const { height } = this;
+
+		for ( let y = 0;  y < height;  y++ )
+		{
+			this.updateRow (y);
+		}
+	}
+
+	updateRow ( rowIndex )
+	{
+		const row = this.tiles[rowIndex];
+
+		for ( let x = 0;  x < PF_WIDTH_TILES;  x++ )
+		{
+			this.updateTile (x, rowIndex);
+		}
+	}
+
+	updateTile ( x, y )
+	{
+		const tileColor = getColor (this.getTileColor (y));
+		const bgColor   = getColor (this.getBackgroundColor (y));
+		const color     = this.getTile (x, y) ? tileColor : bgColor;
+
+		const { tileHeight, imageData } = this;
+
+		const startX = x      * TILE_WIDTH;
+		const startY = y      * tileHeight;
+		const endX   = startX + TILE_WIDTH;
+		const endY   = startY + tileHeight;
+
+		for ( let tileY = startY;  tileY < endY;  tileY++ )
+		{
+			for ( let tileX = startX;  tileX < endX;  tileX++ )
+			{
+				setPixel (imageData, tileX, tileY, color);
+			}
+		}
 	}
 }
 

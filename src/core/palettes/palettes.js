@@ -1,10 +1,11 @@
 import has from 'has';
 
-import NTSC  from '~/core/palettes/NTSC.js';
-import PAL   from '~/core/palettes/PAL.js';
-import SECAM from '~/core/palettes/SECAM.js';
+import NTSC       from '~/core/palettes/NTSC.js';
+import PAL        from '~/core/palettes/PAL.js';
+import SECAM      from '~/core/palettes/SECAM.js';
+import deepFreeze from '~/utility/deepFreeze.js';
 
-const palettes = { NTSC, PAL, SECAM };
+const palettes = deepFreeze ({ NTSC, PAL, SECAM });
 
 /**
  * Get an RGBA color array at an index in a specific palette.
@@ -49,4 +50,5 @@ const getMaxColors = ( paletteName = 'NTSC' ) =>
 };
 
 
+export default palettes;
 export { getColor, getMaxColors };

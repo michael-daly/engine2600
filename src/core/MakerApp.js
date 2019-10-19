@@ -112,9 +112,8 @@ class MakerApp
 			return;
 		}
 
-		const delta = performance.now () - this._lastUpdateTime;
-
-		this.events.emit ('update', delta);
+		// Emit "update" event with the delta as the argument.
+		this.events.emit ('update', performance.now () - this._lastUpdateTime);
 
 		this._lastUpdateTime = performance.now ();
 		this._updateTimeout  = setTimeout (this._updateBound, TICK_RATE);

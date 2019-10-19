@@ -37,7 +37,7 @@ class Playfield
 			return { bgColor: 0, tileColor: 1, rowTiles: createArray (width, () => 0) };
 		});
 
-		// Static properties -- don't change them or you'll break everything.
+		// Static properties -- don't change them.
 		this.tileWidth  = TILE_WIDTH;
 		this.tileHeight = tileHeight;
 

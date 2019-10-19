@@ -231,17 +231,17 @@ class Playfield
 	 */
 	render ( context )
 	{
-		const { palette, tileHeight } = this;
+		const { palette, tileWidth, tileHeight } = this;
 
 		this.forEachTile (( x, y, tile, rowTiles ) =>
 		{
 			const bgRGBA   = getColor (palette, this.getBackgroundColor (y));
 			const tileRGBA = getColor (palette, this.getTileColor (y));
 
-			const tileX = x * TILE_WIDTH;
+			const tileX = x * tileWidth;
 			const tileY = y * tileHeight;
 
-			drawFillRect (context, tile ? tileRGBA : bgRGBA, tileX, tileY, TILE_WIDTH, tileHeight);
+			drawFillRect (context, tile ? tileRGBA : bgRGBA, tileX, tileY, tileWidth, tileHeight);
 		});
 	}
 }

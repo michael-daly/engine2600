@@ -21,11 +21,10 @@ from '~/core/constants.js';
 class Playfield
 {
 	/**
+	 * @param {string}  palette    - The color palette we want to use.  Available: NTSC, PAL, and SECAM.
 	 * @param {integer} tileHeight - The height of a playfield tile -- must be a divisor of 192.
-	 * @param {integer} bgColor    - Default row background color index.
-	 * @param {integer} tileColor  - Default row tile color index.
 	 */
-	constructor ( tileHeight = 16, bgColor = 0, tileColor = 7 )
+	constructor ( palette = 'NTSC', tileHeight = 16 )
 	{
 		if ( PF_HEIGHT_PIXELS % tileHeight !== 0 )
 		{
@@ -38,11 +37,14 @@ class Playfield
 		// Initialize tile array with the all tiles set to 0, and all the colors set to their defaults.
 		this.tiles = createArray (height, () =>
 		{
-			return { bgColor, tileColor, rowTiles: createArray (width, () => 0) };
+			return { bgColor: 0, tileColor: 1, rowTiles: createArray (width, () => 0) };
 		});
 
 		// Static property -- don't change it or you'll break everything.
 		this.tileHeight = tileHeight;
+
+		// Color palette -- don't change this.
+		this.palette = palette;
 
 		// Playfield width and height in tiles.
 		this.width  = width;
@@ -72,21 +74,49 @@ class Playfield
 	}
 
 	/**
+	 * Call callback on each row.
+	 *
+	 * @param {Function} callback - (rowIndex, row)
+	 */
+	forEachRow ( callback )
+	{
+		const { height, tiles } = this;
+
+		for ( let y = 0;  y < height;  y++ )
+		{
+			callback (y, tiles[y]);
+		}
+	}
+
+	/**
+	 * Call callback on each tile.
+	 *
+	 * @param {Function} callback - (x, y, tile, rowTiles)
+	 */
+	forEachTile ( callback )
+	{
+		const { height, width, tiles } = this;
+
+		for ( let y = 0;  y < height;  y++ )
+		{
+			const { rowTiles } = tiles[y];
+
+			for ( let x = 0;  x < width;  x++ )
+			{
+				callback (x, y, rowTiles[x], rowTiles);
+			}
+		}
+	}
+
+	/**
 	 * Reset all tiles to 0.
 	 */
 	clearTiles ()
 	{
-		const { height, width } = this;
-
-		for ( let y = 0;  y < height;  y++ )
+		this.forEachTile (( x, y, tile, rowTiles ) =>
 		{
-			const { rowTiles } = this.tiles[y];
-
-			for ( let x = 0;  x < width;  x++ )
-			{
-				rowTiles[x] = 0;
-			}
-		}
+			rowTiles[x] = 0;
+		});
 
 		this.updateAllTiles ();
 	}
@@ -146,8 +176,33 @@ class Playfield
 		}
 
 		this.tiles[y].rowTiles[x] = +(!!bool);
-
 		this.updateTile (x, y);
+	}
+
+	/**
+	 * Set the background color index for all rows.
+	 *
+	 * @param {integer} colorIndex
+	 */
+	setBackgroundColor ( colorIndex )
+	{
+		this.forEachRow (rowIndex =>
+		{
+			this.setRowBGColor (rowIndex, colorIndex);
+		});
+	}
+
+	/**
+	 * Set the tile color index for all rows.
+	 *
+	 * @param {integer} colorIndex
+	 */
+	setTileColor ( colorIndex )
+	{
+		this.forEachRow (rowIndex =>
+		{
+			this.setRowTileColor (rowIndex, colorIndex);
+		});
 	}
 
 	/**
@@ -156,7 +211,7 @@ class Playfield
 	 * @param {integer} rowIndex
 	 * @param {integer} colorIndex
 	 */
-	setBackgroundColor ( rowIndex, colorIndex )
+	setRowBGColor ( rowIndex, colorIndex )
 	{
 		this.tiles[rowIndex].bgColor = colorIndex;
 		this.updateRow (rowIndex);
@@ -168,7 +223,7 @@ class Playfield
 	 * @param {integer} rowIndex
 	 * @param {integer} colorIndex
 	 */
-	setTileColor ( rowIndex, colorIndex )
+	setRowTileColor ( rowIndex, colorIndex )
 	{
 		this.tiles[rowIndex].tileColor = colorIndex;
 		this.updateRow (rowIndex);
@@ -179,12 +234,10 @@ class Playfield
 	 */
 	updateAllTiles ()
 	{
-		const { height } = this;
-
-		for ( let y = 0;  y < height;  y++ )
+		this.forEachRow (rowIndex =>
 		{
-			this.updateRow (y);
-		}
+			this.updateRow (rowIndex);
+		});
 	}
 
 	/**
@@ -210,11 +263,11 @@ class Playfield
 	 */
 	updateTile ( x, y )
 	{
-		const tileColor  = getColor (this.getTileColor (y));
-		const bgColor    = getColor (this.getBackgroundColor (y));
-		const pixelColor = this.getTile (x, y) ? tileColor : bgColor;
+		const { tileHeight, imageData, palette } = this;
 
-		const { tileHeight, imageData } = this;
+		const tileColor  = getColor (palette, this.getTileColor (y));
+		const bgColor    = getColor (palette, this.getBackgroundColor (y));
+		const pixelColor = this.getTile (x, y) ? tileColor : bgColor;
 
 		const startX = x      * TILE_WIDTH;
 		const startY = y      * tileHeight;

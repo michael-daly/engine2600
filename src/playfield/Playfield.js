@@ -54,7 +54,7 @@ class Playfield
 		// No X because Atari 2600 has fixed X position for the playfield.
 		this.y = DEFAULT_PF_Y;
 
-		// If this is true, this instance has been disposed of -- don't try to use it.
+		// If this is true, this instance has been disposed of, so don't try to use it.
 		this.isDeleted = false;
 	}
 

@@ -24,13 +24,13 @@ class MakerApp
 		this.canvas  = canvas;
 		this.context = canvas.getContext ('2d');
 
-		// For hooking into the update loop, etc.
+		// For hooking into the update loop.
 		this.events = new EventEmitter ();
 
-		// The playfield this game uses.  Use addPlayfield() to add one.
+		// Use addPlayfield() to create one.
 		this.playfield = null;
 
-		// Player objects 1 and 2.  The Atari 2600 technically only had support for two sprites.
+		// The Atari 2600 technically only had support for two sprites.
 		this.player1 = null;
 		this.player2 = null;
 
@@ -52,7 +52,7 @@ class MakerApp
 		// Neither update() nor render() will run if this is false.
 		this.isRunning = true;
 
-		// If this is true, this instance has been disposed of -- don't try to use it.
+		// If this is true, this instance has been disposed of, so don't try to use it.
 		this.isDeleted = false;
 
 		// Start our loops.

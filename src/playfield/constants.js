@@ -13,9 +13,9 @@ const PF_WIDTH_PIXELS = PF_WIDTH_TILES * TILE_WIDTH;
 // (There's no constant for the playfields' height in tiles, since that varies).
 const PF_HEIGHT_PIXELS = 192;
 
-// Default playfield positions
-const DEFAULT_PF_X = 0;
-const DEFAULT_PF_Y = 4;
+// Playfield positions
+const PLAYFIELD_X = 0;
+const PLAYFIELD_Y = 4;
 
 
 export
@@ -26,6 +26,6 @@ export
 	PF_WIDTH_PIXELS,
 	PF_HEIGHT_PIXELS,
 
-	DEFAULT_PF_X,
-	DEFAULT_PF_Y,
+	PLAYFIELD_X,
+	PLAYFIELD_Y,
 };

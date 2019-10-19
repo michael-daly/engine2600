@@ -48,7 +48,7 @@ class Playfield
 		this.width  = width;
 		this.height = height;
 
-		// Playfield has been disposed of -- don't try to use it if this is true.
+		// If this is true, this instance has been disposed of -- don't try to use it.
 		this.isDeleted = false;
 	}
 

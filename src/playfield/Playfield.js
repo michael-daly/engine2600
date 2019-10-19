@@ -18,8 +18,8 @@ from '~/playfield/constants.js';
 class Playfield
 {
 	/**
-	 * @param {string}  palette    - The color palette we want to use.  Available: NTSC, PAL, and SECAM.
-	 * @param {integer} tileHeight - The height of a playfield tile -- must be a divisor of 192.
+	 * @param {string}  [palette]    - The color palette we want to use.  Available: NTSC, PAL, and SECAM.
+	 * @param {integer} [tileHeight] - The height of a playfield tile -- must be a divisor of 192.
 	 */
 	constructor ( palette = 'NTSC', tileHeight = 16 )
 	{
@@ -229,8 +229,8 @@ class Playfield
 	 * Draws the playfield on a canvas context.
 	 *
 	 * @param {CanvasRenderingContext2D} context
-	 * @param {integer}                  playfieldX - Rendering starting X coordinate.
-	 * @param {integer}                  playfieldY - Rendering starting Y coordinate.
+	 * @param {integer}                  [playfieldX] - Rendering starting X coordinate.
+	 * @param {integer}                  [playfieldY] - Rendering starting Y coordinate.
 	 */
 	render ( context, playfieldX = 0, playfieldY = 0 )
 	{

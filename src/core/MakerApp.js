@@ -14,8 +14,8 @@ class MakerApp
 {
 	/**
 	 * @param {string} elementID - The ID of the element we want to append our canvas to.
-	 * @param {number} scale     - How much to scale up the fixed-resolution (320x226) canvas.
-	 * @param {string} palette   - The color palette to use.
+	 * @param {number} [scale]   - How much to scale up the fixed-resolution (320x226) canvas.
+	 * @param {string} [palette] - The color palette to use.
 	 */
 	constructor ( elementID, scale = 2.0, palette = 'NTSC' )
 	{

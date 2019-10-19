@@ -36,7 +36,8 @@ class Playfield
 			return { bgColor: 0, tileColor: 1, rowTiles: createArray (width, () => 0) };
 		});
 
-		// Static property -- don't change it or you'll break everything.
+		// Static properties -- don't change them or you'll break everything.
+		this.tileWidth  = TILE_WIDTH;
 		this.tileHeight = tileHeight;
 
 		// Color palette -- don't change this.
@@ -114,10 +115,20 @@ class Playfield
 	 * @param {integer} x
 	 * @param {integer} y
 	 *
-	 * @returns {0|1}
+	 * @returns {-1|0|1} The tile bit at (x, y) or -1 if the tile is out of bounds.
 	 */
 	getTile ( x, y )
 	{
+		if ( x < 0  ||  x >= this.width )
+		{
+			return -1;
+		}
+
+		if ( y < 0  ||  y >= this.height )
+		{
+			return -1;
+		}
+
 		return this.tiles[y].rowTiles[x];
 	}
 

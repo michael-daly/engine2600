@@ -18,7 +18,7 @@ const PF_HEIGHT_PIXELS = 192;
 
 // Playfield offsets
 const PF_OFFSET_X = 2 * TILE_WIDTH;
-const PF_OFFSET_Y = 1 * TILE_WIDTH;
+const PF_OFFSET_Y = 2 * TILE_WIDTH;
 
 
 const constants =

@@ -1,20 +1,34 @@
-import NTSC from '~/core/palettes/NTSC.js';
+import has from 'has';
 
+import NTSC  from '~/core/palettes/NTSC.js';
+import PAL   from '~/core/palettes/PAL.js';
+import SECAM from '~/core/palettes/SECAM.js';
+
+const palettes = { NTSC, PAL, SECAM };
 
 /**
- * Get an RGBA color array at an index in the palette.
+ * Get an RGBA color array at an index in a specific palette.
  *
- * @param   {integer}        colorIndex
- * @returns {integer[]|null} RGBA color array, or null if invalid color index.
+ * @param {string}  paletteName - Available palettes: NTSC, PAL, and SECAM.
+ * @param {integer} colorIndex
+ *
+ * @returns {integer[]|null} RGBA color array, or null if invalid color index/palette.
  */
-const getColor = ( colorIndex ) =>
+const getColor = ( paletteName = 'NTSC', colorIndex ) =>
 {
-	if ( colorIndex < 0  ||  colorIndex >= NTSC.length )
+	if ( !has (palettes, paletteName) )
 	{
 		return null;
 	}
 
-	return NTSC[colorIndex];
+	const palette = palettes[paletteName];
+
+	if ( colorIndex < 0  ||  colorIndex >= palette.length )
+	{
+		return null;
+	}
+
+	return palette[colorIndex];
 };
 
 

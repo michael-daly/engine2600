@@ -1,7 +1,8 @@
-import Playfield    from '~/core/Playfield.js';
-import { getColor } from '~/core/palettes/palettes.js';
+import Playfield    from '~/playfield/Playfield.js';
+import { getColor } from '~/palettes/palettes.js';
 
-import { CANVAS_WIDTH, CANVAS_HEIGHT, DEFAULT_PF_X, DEFAULT_PF_Y } from '~/core/constants.js';
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from '~/core/constants.js';
+import { DEFAULT_PF_X, DEFAULT_PF_Y }  from '~/playfield/constants.js';
 
 
 /**

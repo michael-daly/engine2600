@@ -1,6 +1,7 @@
-import { getColor }     from '~/core/palettes/palettes.js';
+import { getColor }     from '~/palettes/palettes.js';
 import { createArray }  from '~/utility/createArray.js';
 import { drawFillRect } from '~/utility/fillDraw.js';
+
 
 import
 {
@@ -8,7 +9,7 @@ import
 	PF_HEIGHT_PIXELS,
 	TILE_WIDTH,
 }
-from '~/core/constants.js';
+from '~/playfield/constants.js';
 
 
 /**

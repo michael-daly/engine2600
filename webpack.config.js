@@ -19,9 +19,11 @@ module.exports =
 	{
 		alias:
 		{
-			'~/src':     path.resolve (__dirname, './src'),
-			'~/core':    path.resolve (__dirname, './src/core'),
-			'~/utility': path.resolve (__dirname, './src/utility'),
+			'~/src':       path.resolve (__dirname, './src'),
+			'~/core':      path.resolve (__dirname, './src/core'),
+			'~/palettes':  path.resolve (__dirname, './src/core/palettes'),
+			'~/playfield': path.resolve (__dirname, './src/playfield'),
+			'~/utility':   path.resolve (__dirname, './src/utility'),
 		}
 	},
 

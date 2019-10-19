@@ -1,3 +1,7 @@
+import { getColor }    from '~/core/palettes/palettes.js';
+import { setPixel }    from '~/utility/imageData.js';
+import { createArray } from '~/utility/createArray.js';
+
 import
 {
 	TILE_WIDTH,
@@ -9,10 +13,6 @@ import
 	MAX_COLORS,
 }
 from '~/core/constants.js';
-
-import { getColor }    from '~/core/palettes/palettes.js';
-import { setPixel }    from '~/utility/imageData.js';
-import { createArray } from '~/utility/createArray.js';
 
 
 class Playfield

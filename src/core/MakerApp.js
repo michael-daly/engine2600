@@ -1,6 +1,6 @@
 import Playfield from '~/core/Playfield.js';
 
-import { CANVAS_WIDTH, CANVAS_HEIGHT } from '~/core/constants.js';
+import { CANVAS_WIDTH, CANVAS_HEIGHT, PF_OFFSET_X, PF_OFFSET_Y } from '~/core/constants.js';
 
 
 /**
@@ -100,7 +100,7 @@ class MakerApp
 		if ( playfield !== null )
 		{
 			// Draw the playfield, if it exists.
-			playfield.render (this.context);
+			playfield.render (this.context, PF_OFFSET_X, PF_OFFSET_Y);
 		}
 
 		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't rebind
@@ -109,18 +109,17 @@ class MakerApp
 	}
 
 	/**
-	 * Adds a playfield, if there is none yet.
+	 * Adds a playfield, deleting the existing one if there is one.
 	 *
 	 * @param {integer} tileHeight - The tile height, provided it's a divisor of 192.
 	 *
-	 * @returns {Playfield} If there's an existing playfield, it will just return that, otherwise
-	 *                      it will return a new one.
+	 * @returns {Playfield}
 	 */
 	addPlayfield ( tileHeight )
 	{
 		if ( this.playfield !== null )
 		{
-			return this.playfield;
+			this.playfield.delete ();
 		}
 
 		return this.playfield = new Playfield (this.palette, tileHeight);

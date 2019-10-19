@@ -39,7 +39,7 @@ class MakerApp
 		this.palette = palette;
 
 		// Non-playfield background color.
-		this.backgroundColor = 0;
+		this.borderColor = 0;
 
 		// Pre-bind the update method so we don't rebind it every single loop.
 		this._updateBound = this.update.bind (this);
@@ -56,10 +56,8 @@ class MakerApp
 		// If this is true, this instance has been disposed of -- don't try to use it.
 		this.isDeleted = false;
 
-		// Start the update loop.
+		// Start our loops.
 		this.update ();
-
-		// Start the render loop.
 		this.render ();
 	}
 
@@ -195,7 +193,7 @@ class MakerApp
 		this.canvas.style['transform'] = `scale(${scale})`;
 	}
 
-	set backgroundColor ( colorIndex )
+	set borderColor ( colorIndex )
 	{
 		this.canvas.style.background = `rgba(${getColor (this.palette, colorIndex)})`;
 	}

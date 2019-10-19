@@ -1,16 +1,12 @@
-import { getColor }    from '~/core/palettes/palettes.js';
-import { setPixel }    from '~/utility/imageData.js';
-import { createArray } from '~/utility/createArray.js';
+import { getColor }     from '~/core/palettes/palettes.js';
+import { createArray }  from '~/utility/createArray.js';
+import { drawFillRect } from '~/utility/fillDraw.js';
 
 import
 {
-	TILE_WIDTH,
-
 	PF_WIDTH_TILES,
-	PF_WIDTH_PIXELS,
 	PF_HEIGHT_PIXELS,
-
-	MAX_COLORS,
+	TILE_WIDTH,
 }
 from '~/core/constants.js';
 
@@ -52,12 +48,6 @@ class Playfield
 
 		// Playfield has been disposed of -- don't try to use it if this is true.
 		this.isDeleted = false;
-
-		// Used for drawing the playfield on a canvas.
-		this.imageData = new ImageData (PF_WIDTH_PIXELS, PF_HEIGHT_PIXELS);
-
-		// Initialize tile image data.
-		this.updateAllTiles ();
 	}
 
 	/**
@@ -68,7 +58,6 @@ class Playfield
 		delete this.tiles;
 		delete this.tileHeight;
 		delete this.height;
-		delete this.imageData;
 
 		this.isDeleted = true;
 	}
@@ -117,8 +106,6 @@ class Playfield
 		{
 			rowTiles[x] = 0;
 		});
-
-		this.updateAllTiles ();
 	}
 
 	/**
@@ -176,7 +163,6 @@ class Playfield
 		}
 
 		this.tiles[y].rowTiles[x] = +(!!bool);
-		this.updateTile (x, y);
 	}
 
 	/**
@@ -214,7 +200,6 @@ class Playfield
 	setRowBGColor ( rowIndex, colorIndex )
 	{
 		this.tiles[rowIndex].bgColor = colorIndex;
-		this.updateRow (rowIndex);
 	}
 
 	/**
@@ -226,61 +211,27 @@ class Playfield
 	setRowTileColor ( rowIndex, colorIndex )
 	{
 		this.tiles[rowIndex].tileColor = colorIndex;
-		this.updateRow (rowIndex);
 	}
 
 	/**
-	 * Update the image data for all tiles.
+	 * Draws the playfield on a canvas context.
+	 *
+	 * @param {CanvasRenderingContext2D} context
 	 */
-	updateAllTiles ()
+	render ( context )
 	{
-		this.forEachRow (rowIndex =>
+		const { palette, tileHeight } = this;
+
+		this.forEachTile (( x, y, tile, rowTiles ) =>
 		{
-			this.updateRow (rowIndex);
+			const bgRGBA   = getColor (palette, this.getBackgroundColor (y));
+			const tileRGBA = getColor (palette, this.getTileColor (y));
+
+			const tileX = x * TILE_WIDTH;
+			const tileY = y * tileHeight;
+
+			drawFillRect (context, tile ? tileRGBA : bgRGBA, tileX, tileY, TILE_WIDTH, tileHeight);
 		});
-	}
-
-	/**
-	 * Update the image data for all tiles in a row.
-	 *
-	 * @param {integer} rowIndex
-	 */
-	updateRow ( rowIndex )
-	{
-		const { width } = this;
-
-		for ( let x = 0;  x < width;  x++ )
-		{
-			this.updateTile (x, rowIndex);
-		}
-	}
-
-	/**
-	 * Update the image data for a tile at (x, y).
-	 *
-	 * @param {integer} x
-	 * @param {integer} y
-	 */
-	updateTile ( x, y )
-	{
-		const { tileHeight, imageData, palette } = this;
-
-		const tileColor  = getColor (palette, this.getTileColor (y));
-		const bgColor    = getColor (palette, this.getBackgroundColor (y));
-		const pixelColor = this.getTile (x, y) ? tileColor : bgColor;
-
-		const startX = x      * TILE_WIDTH;
-		const startY = y      * tileHeight;
-		const endX   = startX + TILE_WIDTH;
-		const endY   = startY + tileHeight;
-
-		for ( let tileY = startY;  tileY < endY;  tileY++ )
-		{
-			for ( let tileX = startX;  tileX < endX;  tileX++ )
-			{
-				setPixel (imageData, tileX, tileY, pixelColor);
-			}
-		}
 	}
 }
 

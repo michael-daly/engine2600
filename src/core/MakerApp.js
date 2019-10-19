@@ -100,7 +100,7 @@ class MakerApp
 		if ( playfield !== null )
 		{
 			// Draw the playfield, if it exists.
-			this.context.putImageData (playfield.imageData, 0, 0);
+			playfield.render (this.context);
 		}
 
 		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't rebind

@@ -1,5 +1,6 @@
 import MakerApp  from '~/core/MakerApp.js';
 import Playfield from '~/core/Playfield.js';
 
+window.app = new MakerApp ('canvas-parent', 2.0, 'SECAM');
 
-window.app = new MakerApp ('canvas-parent', 2.0, new Playfield ());
+app.addPlayfield (1);

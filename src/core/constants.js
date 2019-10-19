@@ -7,7 +7,7 @@ const PIXEL_WIDTH = 2;
 const TILE_WIDTH = 4 * PIXEL_WIDTH;
 
 // The playfields' width in tiles.
-const PF_WIDTH_TILES = 36;
+const PF_WIDTH_TILES = 40;
 
 // The playfields' width in pixels.
 const PF_WIDTH_PIXELS = PF_WIDTH_TILES * TILE_WIDTH;
@@ -16,9 +16,9 @@ const PF_WIDTH_PIXELS = PF_WIDTH_TILES * TILE_WIDTH;
 // (There's no constant for the playfields' height in tiles, since that varies).
 const PF_HEIGHT_PIXELS = 192;
 
-// Playfield offsets
-const PF_OFFSET_X = 2 * TILE_WIDTH;
-const PF_OFFSET_Y = 2 * TILE_WIDTH;
+// Default playfield positions
+const DEFAULT_PF_X = 0;
+const DEFAULT_PF_Y = 4;
 
 
 const constants =
@@ -34,8 +34,8 @@ const constants =
 	PF_WIDTH_PIXELS,
 	PF_HEIGHT_PIXELS,
 
-	PF_OFFSET_X,
-	PF_OFFSET_Y,
+	DEFAULT_PF_X,
+	DEFAULT_PF_Y,
 };
 
 

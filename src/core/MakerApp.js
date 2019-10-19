@@ -2,10 +2,9 @@ import Playfield    from '~/playfield/Playfield.js';
 import EventEmitter from '~/utility/classes/EventEmitter.js';
 import createCanvas from '~/utility/createCanvas.js';
 
-import { getColor }  from '~/palettes/palettes.js';
-import { TICK_RATE } from '~/core/constants.js';
-
-import { PLAYFIELD_X, PLAYFIELD_Y } from '~/playfield/constants.js';
+import { TICK_RATE }    from '~/core/constants.js';
+import { DEFAULT_PF_X } from '~/playfield/constants.js';
+import { getColor }     from '~/palettes/palettes.js';
 
 
 /**
@@ -137,7 +136,7 @@ class MakerApp
 		if ( playfield !== null )
 		{
 			// Draw the playfield, if it exists.
-			playfield.render (this.context, PLAYFIELD_X, PLAYFIELD_Y);
+			playfield.render (this.context, DEFAULT_PF_X, playfield.y);
 		}
 
 		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't rebind

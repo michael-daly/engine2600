@@ -5,9 +5,12 @@ import { drawFillRect } from '~/utility/fillDraw.js';
 
 import
 {
+	TILE_WIDTH,
+
 	PF_WIDTH_TILES,
 	PF_HEIGHT_PIXELS,
-	TILE_WIDTH,
+
+	DEFAULT_PF_Y,
 }
 from '~/playfield/constants.js';
 
@@ -47,6 +50,9 @@ class Playfield
 		// Playfield width and height in tiles.
 		this.width  = width;
 		this.height = height;
+
+		// No X because Atari 2600 has fixed X position for the playfield.
+		this.y = DEFAULT_PF_Y;
 
 		// If this is true, this instance has been disposed of -- don't try to use it.
 		this.isDeleted = false;

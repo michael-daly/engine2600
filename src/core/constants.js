@@ -16,6 +16,10 @@ const PF_WIDTH_PIXELS = PF_WIDTH_TILES * TILE_WIDTH;
 // (There's no constant for the playfields' height in tiles, since that varies).
 const PF_HEIGHT_PIXELS = 192;
 
+// Playfield offsets
+const PF_OFFSET_X = 2 * TILE_WIDTH;
+const PF_OFFSET_Y = 1 * TILE_WIDTH;
+
 
 const constants =
 {
@@ -29,6 +33,9 @@ const constants =
 	PF_WIDTH_TILES,
 	PF_WIDTH_PIXELS,
 	PF_HEIGHT_PIXELS,
+
+	PF_OFFSET_X,
+	PF_OFFSET_Y,
 };
 
 

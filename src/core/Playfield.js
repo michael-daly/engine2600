@@ -228,8 +228,10 @@ class Playfield
 	 * Draws the playfield on a canvas context.
 	 *
 	 * @param {CanvasRenderingContext2D} context
+	 * @param {integer}                  offsetX - Rendering offset X coordinate.
+	 * @param {integer}                  offsetY - Rendering offset Y coordinate.
 	 */
-	render ( context )
+	render ( context, offsetX = 0, offsetY = 0 )
 	{
 		const { palette, tileWidth, tileHeight } = this;
 
@@ -238,8 +240,8 @@ class Playfield
 			const bgRGBA   = getColor (palette, this.getBackgroundColor (y));
 			const tileRGBA = getColor (palette, this.getTileColor (y));
 
-			const tileX = x * tileWidth;
-			const tileY = y * tileHeight;
+			const tileX = (x * tileWidth)  + offsetX;
+			const tileY = (y * tileHeight) + offsetY;
 
 			drawFillRect (context, tile ? tileRGBA : bgRGBA, tileX, tileY, tileWidth, tileHeight);
 		});

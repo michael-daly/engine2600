@@ -151,6 +151,8 @@ class Playfield
 	}
 
 	/**
+	 * Set a row's background color index.
+	 *
 	 * @param {integer} rowIndex
 	 * @param {integer} colorIndex
 	 */
@@ -161,6 +163,8 @@ class Playfield
 	}
 
 	/**
+	 * Set a row's tile color index.
+	 *
 	 * @param {integer} rowIndex
 	 * @param {integer} colorIndex
 	 */
@@ -206,9 +210,9 @@ class Playfield
 	 */
 	updateTile ( x, y )
 	{
-		const tileColor = getColor (this.getTileColor (y));
-		const bgColor   = getColor (this.getBackgroundColor (y));
-		const color     = this.getTile (x, y) ? tileColor : bgColor;
+		const tileColor  = getColor (this.getTileColor (y));
+		const bgColor    = getColor (this.getBackgroundColor (y));
+		const pixelColor = this.getTile (x, y) ? tileColor : bgColor;
 
 		const { tileHeight, imageData } = this;
 
@@ -221,7 +225,7 @@ class Playfield
 		{
 			for ( let tileX = startX;  tileX < endX;  tileX++ )
 			{
-				setPixel (imageData, tileX, tileY, color);
+				setPixel (imageData, tileX, tileY, pixelColor);
 			}
 		}
 	}

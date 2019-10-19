@@ -1,3 +1,5 @@
+import Playfield from '~/core/Playfield.js';
+
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '~/core/constants.js';
 
 
@@ -7,11 +9,11 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '~/core/constants.js';
 class MakerApp
 {
 	/**
-	 * @param {string}         elementID - The ID of the element we want to append our canvas to.
-	 * @param {number}         scale     - How much to scale up the fixed-resolution (320x226) canvas.
-	 * @param {Playfield|null} playfield - The Playfield instance we want to use for the game.
+	 * @param {string} elementID - The ID of the element we want to append our canvas to.
+	 * @param {number} scale     - How much to scale up the fixed-resolution (320x226) canvas.
+	 * @param {string} palette   - The color palette to use.
 	 */
-	constructor ( elementID, scale = 2.0, playfield = null )
+	constructor ( elementID, scale = 2.0, palette = 'NTSC' )
 	{
 		/* Create the canvas we will render everything on. */
 
@@ -32,9 +34,15 @@ class MakerApp
 
 		this.canvas  = canvas;
 		this.context = canvas.getContext ('2d');
+		this.scale   = scale;
 
-		// This can be set later, and playfields can easily be swapped out for one another.
-		this.playfield = playfield;
+		this.palette = palette;
+
+		/* These are set later. */
+
+		this.playfield = null;
+		this.player1   = null;
+		this.player2   = null;
 
 		// MakerApp has been disposed of -- don't try to use it if this is true.
 		this.isDeleted = false;
@@ -98,6 +106,38 @@ class MakerApp
 		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't rebind
 		// the method every single loop.
 		requestAnimationFrame (this.renderBound);
+	}
+
+	/**
+	 * Adds a playfield, if there is none yet.
+	 *
+	 * @param {integer} tileHeight - The tile height, provided it's a divisor of 192.
+	 *
+	 * @returns {Playfield} If there's an existing playfield, it will just return that, otherwise
+	 *                      it will return a new one.
+	 */
+	addPlayfield ( tileHeight )
+	{
+		if ( this.playfield !== null )
+		{
+			return this.playfield;
+		}
+
+		return this.playfield = new Playfield (this.palette, tileHeight);
+	}
+
+	/**
+	 * Deletes the playfield and sets the property to null.
+	 */
+	deletePlayfield ()
+	{
+		if ( this.playfield === null )
+		{
+			return;
+		}
+
+		this.playfield.delete ();
+		this.playfield = null;
 	}
 
 	get width ()

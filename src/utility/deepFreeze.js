@@ -1,24 +1,31 @@
-const deepFreeze = object =>
+/**
+ * Recursively freeze an object/array.
+ *
+ * @param {Object|Array} objectOrArray
+ *
+ * @returns {Object|Array} The frozen object/array.
+ */
+const deepFreeze = objectOrArray =>
 {
-	if ( Array.isArray (object) )
+	if ( Array.isArray (objectOrArray) )
 	{
-		const length = object.length;
+		const length = objectOrArray.length;
 
 		for ( let i = 0;  i < length;  i++ )
 		{
-			deepFreeze (object[i]);
+			deepFreeze (objectOrArray[i]);
 		}
 	}
 	
-	if ( typeof object === 'object' )
+	if ( typeof objectOrArray === 'object' )
 	{
-		for ( let i in object )
+		for ( let i in objectOrArray )
 		{
-			deepFreeze (object[i]);
+			deepFreeze (objectOrArray[i]);
 		}
 	}
 
-	Object.freeze (object);
+	return Object.freeze (objectOrArray);
 };
 
 

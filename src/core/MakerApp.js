@@ -44,7 +44,6 @@ class MakerApp
 		this.player1   = null;
 		this.player2   = null;
 
-		this.playfieldPosX = DEFAULT_PF_X;
 		this.playfieldPosY = DEFAULT_PF_Y;
 
 		// MakerApp has been disposed of -- don't try to use it if this is true.
@@ -74,7 +73,6 @@ class MakerApp
 		delete this.playfield;
 		delete this.player1;
 		delete this.player2;
-		delete this.playfieldPosX;
 		delete this.playfieldPosY;
 		delete this.renderBound;
 		delete this.isRendering;
@@ -108,7 +106,7 @@ class MakerApp
 		if ( playfield !== null )
 		{
 			// Draw the playfield, if it exists.
-			playfield.render (this.context, this.playfieldPosX, this.playfieldPosY);
+			playfield.render (this.context, DEFAULT_PF_X, this.playfieldPosY);
 		}
 
 		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't rebind

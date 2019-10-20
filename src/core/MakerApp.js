@@ -1,4 +1,5 @@
 import Playfield    from '~/playfield/Playfield.js';
+import Player       from '~/player/Player.js';
 import EventEmitter from '~/utility/classes/EventEmitter.js';
 import createCanvas from '~/utility/createCanvas.js';
 
@@ -131,12 +132,22 @@ class MakerApp
 		// Clear the canvas so we can draw the updated graphics.
 		this.clearCanvas ();
 
-		const { playfield } = this;
+		const { playfield, player1, player2 } = this;
 
 		if ( playfield !== null )
 		{
 			// Draw the playfield, if it exists.
-			playfield.render (this.context, DEFAULT_PF_X, playfield.y);
+			playfield.render (this.context);
+		}
+
+		if ( player1 !== null )
+		{
+			player1.render (this.context);
+		}
+
+		if ( player2 !== null )
+		{
+			player2.render (this.context);
 		}
 
 		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't rebind
@@ -158,7 +169,36 @@ class MakerApp
 			this.playfield.delete ();
 		}
 
-		return this.playfield = new Playfield (this.palette, tileHeight);
+		return this.playfield = new Playfield (tileHeight, this.palette);
+	}
+
+	/**
+	 * Adds a player, deleting the existing one if there is one.
+	 *
+	 * @param {Sprite} sprite - The sprite to add to the player.
+	 * @param {1|2}    type   - Whether to add player1 or player2.
+	 *
+	 * @returns {Player|null} - Newly-created player instance, null if invalid type.
+	 */
+	addPlayer ( sprite, type = 1 )
+	{
+		let field;
+
+		if ( type === 1  ||  type === 2 )
+		{
+			field = `player${type}`;
+		}
+		else
+		{
+			return null;
+		}
+
+		if ( this[field] !== null )
+		{
+			this[field].delete ();
+		}
+
+		return this[field] = new Player (sprite, this.palette);
 	}
 
 	/**

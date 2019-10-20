@@ -10,6 +10,7 @@ import
 	PF_WIDTH_TILES,
 	PF_HEIGHT_PIXELS,
 
+	DEFAULT_PF_X,
 	DEFAULT_PF_Y,
 }
 from '~/playfield/constants.js';
@@ -21,10 +22,10 @@ from '~/playfield/constants.js';
 class Playfield
 {
 	/**
-	 * @param {string}  [palette]    - The color palette we want to use.  Available: NTSC, PAL, and SECAM.
 	 * @param {integer} [tileHeight] - The height of a playfield tile -- must be a divisor of 192.
+	 * @param {string}  [palette]    - The color palette we want to use.  Available: NTSC, PAL, and SECAM.
 	 */
-	constructor ( palette = 'NTSC', tileHeight = 16 )
+	constructor ( tileHeight = 16, palette = 'NTSC' )
 	{
 		if ( PF_HEIGHT_PIXELS % tileHeight !== 0 )
 		{
@@ -51,7 +52,7 @@ class Playfield
 		this.width  = width;
 		this.height = height;
 
-		// No X because Atari 2600 has fixed X position for the playfield.
+		this.x = DEFAULT_PF_X;
 		this.y = DEFAULT_PF_Y;
 
 		// If this is true, this instance has been disposed of, so don't try to use it.
@@ -235,22 +236,20 @@ class Playfield
 	 * Draws the playfield on a canvas context.
 	 *
 	 * @param {CanvasRenderingContext2D} context
-	 * @param {integer}                  [playfieldX] - Rendering starting X coordinate.
-	 * @param {integer}                  [playfieldY] - Rendering starting Y coordinate.
 	 */
-	render ( context, playfieldX = 0, playfieldY = 0 )
+	render ( context )
 	{
-		const { palette, tileWidth, tileHeight } = this;
+		const { palette, tileWidth, tileHeight, x, y } = this;
 
-		this.forEachTile (( x, y, tile, rowTiles ) =>
+		this.forEachTile (( tileX, tileY, tile, rowTiles ) =>
 		{
-			const bgRGBA   = getColor (palette, this.getBackgroundColor (y));
-			const tileRGBA = getColor (palette, this.getTileColor (y));
+			const bgRGBA   = getColor (palette, this.getBackgroundColor (tileY));
+			const tileRGBA = getColor (palette, this.getTileColor (tileY));
 
-			const tileX = (x * tileWidth)  + playfieldX;
-			const tileY = (y * tileHeight) + playfieldY;
+			const drawX = (tileX * tileWidth)  + x;
+			const drawY = (tileY * tileHeight) + y;
 
-			drawFillRect (context, tile ? tileRGBA : bgRGBA, tileX, tileY, tileWidth, tileHeight);
+			drawFillRect (context, tile ? tileRGBA : bgRGBA, drawX, drawY, tileWidth, tileHeight);
 		});
 	}
 }

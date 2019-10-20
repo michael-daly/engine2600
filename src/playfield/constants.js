@@ -15,7 +15,7 @@ const PF_HEIGHT_PIXELS = 192;
 
 // Playfield positions
 const DEFAULT_PF_X = 0;
-const DEFAULT_PF_Y = 4;
+const DEFAULT_PF_Y = 3;
 
 
 export

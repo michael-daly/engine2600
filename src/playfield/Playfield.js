@@ -23,9 +23,8 @@ class Playfield
 {
 	/**
 	 * @param {integer} [tileHeight] - The height of a playfield tile -- must be a divisor of 192.
-	 * @param {string}  [palette]    - The color palette we want to use.  Available: NTSC, PAL, and SECAM.
 	 */
-	constructor ( tileHeight = 16, palette = 'NTSC' )
+	constructor ( tileHeight = 16 )
 	{
 		if ( PF_HEIGHT_PIXELS % tileHeight !== 0 )
 		{
@@ -44,9 +43,6 @@ class Playfield
 		// Static properties -- don't change them.
 		this.tileWidth  = TILE_WIDTH;
 		this.tileHeight = tileHeight;
-
-		// Color palette -- don't change this.
-		this.palette = palette;
 
 		// Playfield width and height in tiles.
 		this.width  = width;
@@ -235,11 +231,12 @@ class Playfield
 	/**
 	 * Draws the playfield on a canvas context.
 	 *
-	 * @param {CanvasRenderingContext2D} context
+	 * @param {CanvasRenderingContext2D} context - The canvas context to draw this on.
+	 * @param {string}                   palette - The color palette to draw this with.
 	 */
-	render ( context )
+	render ( context, palette )
 	{
-		const { palette, tileWidth, tileHeight, x, y } = this;
+		const { tileWidth, tileHeight, x, y } = this;
 
 		this.forEachTile (( tileX, tileY, tile, rowTiles ) =>
 		{

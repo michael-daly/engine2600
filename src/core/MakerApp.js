@@ -18,7 +18,7 @@ class MakerApp
 	 * @param {number} [scale]   - How much to scale up the fixed-resolution (320x226) canvas.
 	 * @param {string} [palette] - The color palette to use.
 	 */
-	constructor ( elementID, scale = 2.0, palette = 'NTSC' )
+	constructor ( elementID, scale = 3.0, palette = 'NTSC' )
 	{
 		const canvas = createCanvas (elementID, scale);
 
@@ -132,22 +132,22 @@ class MakerApp
 		// Clear the canvas so we can draw the updated graphics.
 		this.clearCanvas ();
 
-		const { playfield, player1, player2 } = this;
+		const { palette, context, playfield, player1, player2 } = this;
 
 		if ( playfield !== null )
 		{
 			// Draw the playfield, if it exists.
-			playfield.render (this.context);
+			playfield.render (context, palette);
 		}
 
 		if ( player1 !== null )
 		{
-			player1.render (this.context);
+			player1.render (context, palette);
 		}
 
 		if ( player2 !== null )
 		{
-			player2.render (this.context);
+			player2.render (context, palette);
 		}
 
 		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't rebind
@@ -169,7 +169,7 @@ class MakerApp
 			this.playfield.delete ();
 		}
 
-		return this.playfield = new Playfield (tileHeight, this.palette);
+		return this.playfield = new Playfield (tileHeight);
 	}
 
 	/**
@@ -198,7 +198,7 @@ class MakerApp
 			this[field].delete ();
 		}
 
-		return this[field] = new Player (sprite, this.palette);
+		return this[field] = new Player (sprite);
 	}
 
 	/**

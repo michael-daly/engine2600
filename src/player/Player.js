@@ -11,18 +11,14 @@ class Player
 {
 	/**
 	 * @param {Sprite|null} sprite
-	 * @param {string}     [palette] - The color palette we want to use.  Available: NTSC, PAL, and SECAM.
 	 */
-	constructor ( sprite = null, palette = 'NTSC' )
+	constructor ( sprite = null )
 	{
 		this.sprite  = sprite;
 		this.x       = DEFAULT_PLAYER_X;
 		this.y       = DEFAULT_PLAYER_Y;
 		this.flipX   = false;
 		this.flipY   = false;
-
-		// Color palette -- don't change this.
-		this.palette = palette;
 
 		// If this is true, this instance has been disposed of, so don't try to use it.
 		this.isDeleted = false;
@@ -53,11 +49,12 @@ class Player
 	/**
 	 * Draws the player's sprite on a canvas context.
 	 *
-	 * @param {CanvasRenderingContext2D} context
+	 * @param {CanvasRenderingContext2D} context - The canvas context to draw this on.
+	 * @param {string}                   palette - The color palette to draw this with.
 	 */
-	render ( context )
+	render ( context, palette )
 	{
-		const { palette, sprite, x, y, flipX, flipY } = this;
+		const { sprite, x, y, flipX, flipY } = this;
 
 		sprite.forEachPixel (( pixelX, pixelY, pixel ) =>
 		{
@@ -68,7 +65,15 @@ class Player
 
 			const rowRGBA = getColor (palette, sprite.getRowColor (pixelY));
 
-			drawFillRect (context, rowRGBA, pixelX + x, pixelY + y, PIXEL_WIDTH, PIXEL_HEIGHT);
+			let drawX = pixelX + x;
+			let drawY = pixelY + y;
+
+			if ( flipX )
+			{
+				drawX = (sprite.width - pixelX) - (PIXEL_WIDTH / 2) + x;
+			}
+
+			drawFillRect (context, rowRGBA, drawX, pixelY + y, PIXEL_WIDTH, PIXEL_HEIGHT);
 		});
 	}
 }

@@ -1,5 +1,3 @@
-import Tilemap from '~/playfield/Tilemap.js';
-
 import { getColor }     from '~/palettes/palettes.js';
 import { coordToTile }  from '~/utility/snapCoord.js';
 import { createArray }  from '~/utility/createArray.js';

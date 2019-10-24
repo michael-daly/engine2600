@@ -1,6 +1,9 @@
 import { TILE_WIDTH, PF_WIDTH_TILES, PF_HEIGHT_PIXELS } from '~/playfield/constants.js';
 
 
+/**
+ * A class for rendering playfields.
+ */
 class Tilemap
 {
 	/**
@@ -63,6 +66,51 @@ class Tilemap
 		{
 			callback (x, row[x]);
 		}
+	}
+
+	/**
+	 * Set tile bit at (x, y).
+	 *
+	 * @param {integer} x
+	 * @param {integer} y
+	 * @param {0|1}     bool
+	 */
+	setTile ( x, y, bool )
+	{
+		if ( x < 0  ||  x >= this.width )
+		{
+			return;
+		}
+
+		if ( y < 0  ||  y >= this.height )
+		{
+			return;
+		}
+
+		this.tiles[y][x] = +(!!bool);
+	}
+
+	/**
+	 * Get tile bit at (x, y).
+	 *
+	 * @param {integer} x
+	 * @param {integer} y
+	 *
+	 * @returns {-1|0|1} -1 if invalid coordinate.
+	 */
+	getTile ( x, y )
+	{
+		if ( x < 0  ||  x >= this.width )
+		{
+			return -1;
+		}
+
+		if ( y < 0  ||  y >= this.height )
+		{
+			return -1;
+		}
+
+		return this.tiles[y][x];
 	}
 }
 

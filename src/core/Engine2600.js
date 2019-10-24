@@ -152,6 +152,8 @@ class Engine2600
 			ball,
 			player0,
 			player1,
+			pfBGColors,
+			pfTileColors,
 			player0Colors,
 			player1Colors,
 		}
@@ -160,10 +162,25 @@ class Engine2600
 		// Go scanline-by-scanline to emulate how the Atari 2600 draws graphics.
 		for ( let scanline = 0;  scanline < CANVAS_HEIGHT;  scanline++ )
 		{
-			const tileY = coordToTile (scanline, playfield.tileHeight);
+			const { tilemap } = playfield;
 
-			// TODO: pfTileColors
-			// TODO: pfBGColors
+			if ( scanline >= playfield.y  &&  tilemap !== null )
+			{
+				/* Playfield only has one background/tile color at a time to emulate the 2600 again.
+				   This has the effect of the ball being different colors when it's between tiles. */
+
+				const tileY = coordToTile (scanline, tilemap.tileHeight);
+
+				if ( tileY < pfBGColors.length )
+				{
+					playfield.backgroundColor = pfBGColors[tileY];
+				}
+
+				if ( tileY < pfTileColors.length )
+				{
+					playfield.tileColor = pfTileColors[tileY];
+				}
+			}
 
 			playfield.render (context, palette, scanline);
 
@@ -176,13 +193,13 @@ class Engine2600
 
 			for ( let p = 0;  p < players.length;  p++ )
 			{
-				const player    = players[p];
-				const colors    = playerColors[p];
-				const relativeY = scanline - player.y;
+				const player     = players[p];
+				const colors     = playerColors[p];
+				const playerRelY = scanline - player.y;
 
-				if ( relativeY < colors.length )
+				if ( playerRelY < colors.length )
 				{
-					player.color = colors[relativeY];
+					player.color = colors[playerRelY];
 				}
 
 				player.render (context, palette, scanline);

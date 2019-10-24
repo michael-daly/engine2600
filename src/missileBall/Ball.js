@@ -25,17 +25,17 @@ class Ball
 	 * @param {integer} width  - 1, 2, 4, or 8.
 	 * @param {integer} height - Heights are arbitrary.
 	 */
-	constructor ( width = DEFAULT_BALL_WIDTH, height = DEFAULT_BALL_WIDTH )
+	constructor ( width = DEFAULT_BALL_WIDTH, height = DEFAULT_BALL_HEIGHT )
 	{
 		if ( VALID_WIDTHS.indexOf (width) < 0 )
 		{
 			throw new Error ('Invalid ball width');
 		}
 
-		this.width  = width;
-		this.height = height;
-		this.x      = DEFAULT_BALL_X;
-		this.y      = DEFAULT_BALL_Y;
+		this.x       = DEFAULT_BALL_X;
+		this.y       = DEFAULT_BALL_Y;
+		this._width  = width;
+		this._height = height;
 
 		// If this is true, this instance has been disposed of, so don't try to use it.
 		this.isDeleted = false;
@@ -46,10 +46,10 @@ class Ball
 	 */
 	delete ()
 	{
-		delete this.width;
-		delete this.height;
 		delete this.x;
 		delete this.y;
+		delete this._width;
+		delete this._height;
 
 		this.isDeleted = true;
 	}
@@ -65,7 +65,9 @@ class Ball
 	{
 		const { width, height, x, y } = this;
 
-		if ( width <= 0  ||  height <= 0  ||  scanline < y  ||  scanline >= y + height )
+		const maxY = y + (height * BALL_MUL_HEIGHT) + BALL_ADD_HEIGHT;
+
+		if ( width <= 0  ||  height <= 0  ||  scanline < y  ||  scanline >= maxY )
 		{
 			return;
 		}
@@ -74,6 +76,36 @@ class Ball
 		const drawHeight = 1;
 
 		drawFillRect (context, colorRGBA, x, scanline, drawWidth, drawHeight);
+	}
+
+	set width ( width )
+	{
+		if ( VALID_WIDTHS.indexOf (width) < 0 )
+		{
+			return;
+		}
+
+		this._width = width;
+	}
+
+	set height ( height )
+	{
+		if ( height < 0 )
+		{
+			return;
+		}
+
+		this._height = height;
+	}
+
+	get width ()
+	{
+		return this._width;
+	}
+
+	get height ()
+	{
+		return this._height;
 	}
 }
 

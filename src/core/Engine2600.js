@@ -1,6 +1,7 @@
-import Playfield    from '~/playfield/Playfield.js';
-import Player       from '~/player/Player.js';
-import Ball         from '~/missileBall/Ball.js';
+import Playfield from '~/playfield/Playfield.js';
+import Player    from '~/player/Player.js';
+import Ball      from '~/missileBall/Ball.js';
+import Missile   from '~/missileBall/Missile.js';
 
 import EventEmitter from '~/utility/classes/EventEmitter.js';
 import createCanvas from '~/utility/createCanvas.js';
@@ -36,8 +37,8 @@ class Engine2600
 		this.ball      = new Ball ();
 		this.player0   = new Player ();
 		this.player1   = new Player ();
-		this.missile0  = null;
-		this.missile1  = null;
+		this.missile0  = new Missile ();
+		this.missile1  = new Missile ();
 
 		// Name of the color palette we'll use for the playfield and all sprites.
 		this.palette = palette;
@@ -152,6 +153,8 @@ class Engine2600
 			ball,
 			player0,
 			player1,
+			missile0,
+			missile1,
 			pfBGColors,
 			pfTileColors,
 			player0Colors,
@@ -193,12 +196,13 @@ class Engine2600
 
 			const players      = [player1, player0];
 			const playerColors = [player1Colors, player0Colors];
-			// TODO: missiles
+			const missiles     = [missile1, missile0];
 
 			for ( let p = 0;  p < players.length;  p++ )
 			{
 				const player     = players[p];
 				const colors     = playerColors[p];
+				const missile    = missiles[p];
 				const playerRelY = scanline - player.y;
 
 				if ( playerRelY < colors.length )
@@ -207,6 +211,7 @@ class Engine2600
 				}
 
 				player.render (context, palette, scanline);
+				missile.render (context, getColor (palette, player.color), scanline);
 			}
 		}
 

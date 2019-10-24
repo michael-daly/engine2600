@@ -191,8 +191,8 @@ class Engine2600
 
 			/* Render player0 and player1 */
 
-			const players      = [player0, player1];
-			const playerColors = [player0Colors, player1Colors];
+			const players      = [player1, player0];
+			const playerColors = [player1Colors, player0Colors];
 			// TODO: missiles
 
 			for ( let p = 0;  p < players.length;  p++ )

@@ -62,13 +62,14 @@ class Playfield
 		}
 
 		const { height, tileHeight } = tilemap;
+		const relativeY              = scanline - y;
 
-		if ( scanline < y  ||  scanline >= y + (height * tileHeight) )
+		if ( scanline < y  ||  scanline >= relativeY + (height * tileHeight) )
 		{
 			return;
 		}
 
-		const tileY    = coordToTile (scanline, tileHeight);
+		const tileY    = coordToTile (relativeY, tileHeight);
 		const bgRGBA   = getColor (palette, backgroundColor);
 		const tileRGBA = getColor (palette, tileColor);
 
@@ -80,8 +81,6 @@ class Playfield
 		});
 	}
 }
-
-window.windex = 20;
 
 
 export default Playfield;

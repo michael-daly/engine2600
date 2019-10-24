@@ -1,5 +1,9 @@
 import MissileBall from '~/missileBall/MissileBall.js';
 
+import { drawFillRect } from '~/utility/fillDraw.js';
+import { getColor }     from '~/palettes/palettes.js';
+
+
 /**
  * Stub class in case we want to overwrite some methods from MissileBall.
  */

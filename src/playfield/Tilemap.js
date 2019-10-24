@@ -114,5 +114,34 @@ class Tilemap
 	}
 }
 
+/**
+ * Creates an empty (160x192) playfield with a specific tileHeight.
+ *
+ * @param {integer} tileHeight - The height each tile will be -- must be a divisor of 192.
+ *
+ * @returns {Tilemap}
+ */
+const createEmptyTilemap = ( tileHeight = 16 ) =>
+{
+	const tileData = [];
+	const height   = (PF_HEIGHT_PIXELS / tileHeight);
+
+	for ( let y = 0;  y < height;  y++ )
+	{
+		const row = [];
+
+		for ( let x = 0;  x < PF_WIDTH_TILES;  x++ )
+		{
+			row.push (0);
+		}
+
+		tileData.push (row);
+	}
+
+	return new Tilemap (tileData, tileHeight);
+};
+
+
+export { createEmptyTilemap };
 
 export default Tilemap;

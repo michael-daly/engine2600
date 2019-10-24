@@ -57,19 +57,23 @@ class Ball
 	/**
 	 * Draws the player's sprite on a canvas context.
 	 *
-	 * @param {CanvasRenderingContext2D} context    - The canvas context to draw this on.
-	 * @param {string}                   palette    - The color palette to draw this with.
-	 * @param {integer}                  colorIndex - The color index to draw this with.
+	 * @param {CanvasRenderingContext2D} context   - The canvas context to draw this on.
+	 * @param {integer[]}                colorRGBA - The RGBA color to draw this as.
+	 * @param {integer}                  scanline  - The scanline we're currently rendering.
 	 */
-	render ( context, palette, colorIndex )
+	render ( context, colorRGBA, scanline )
 	{
 		const { width, height, x, y } = this;
 
-		const ballRGBA   = getColor (palette, colorIndex);
-		const drawWidth  = (BALL_MUL_WIDTH  * width);
+		if ( width <= 0  ||  height <= 0  ||  scanline < y  ||  scanline >= y + height )
+		{
+			return;
+		}
+
+		const drawWidth  = (width * BALL_MUL_WIDTH);
 		const drawHeight = 1;
 
-		drawFillRect (context, ballRGBA, x, y, drawWidth, drawHeight);
+		drawFillRect (context, colorRGBA, x, scanline, drawWidth, drawHeight);
 	}
 }
 

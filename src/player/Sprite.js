@@ -1,6 +1,6 @@
 import deepFreeze from '~/utility/deepFreeze.js';
 
-import { MAX_SPRITE_WIDTH, MAX_SPRITE_HEIGHT } from '~/sprite/constants.js';
+import { MAX_SPRITE_WIDTH } from '~/player/constants.js';
 
 
 /**
@@ -9,12 +9,12 @@ import { MAX_SPRITE_WIDTH, MAX_SPRITE_HEIGHT } from '~/sprite/constants.js';
 class Sprite
 {
 	/**
-	 * @param {Object[]} pixelData - [{ rowColor: 0, rowPixels: [...] }, ...]
+	 * @param {Array[]} pixelData - [ [ ... ], ... ]
 	 */
-	constructor ( pixelData = [] )
+	constructor ( pixelData )
 	{
 		const height = pixelData.length;
-		const width  = pixelData[0].rowPixels.length;
+		const width  = pixelData[0].length;
 
 		if ( width < 1 )
 		{
@@ -31,11 +31,6 @@ class Sprite
 			throw new Error (`Sprite must be at least 1 pixel high`);
 		}
 
-		if ( height > MAX_SPRITE_HEIGHT )
-		{
-			throw new Error (`Sprite cannot be higher than ${MAX_SPRITE_HEIGHT} pixel(s)`);
-		}
-
 		/* These are all static properties -- don't change them. */
 
 		this.width  = width;
@@ -44,22 +39,25 @@ class Sprite
 	}
 
 	/**
-	 * Call callback on each pixel.
+	 * Call a callback on each pixel in a row.
 	 *
-	 * @param {Function} callback - (x, y, pixel)
+	 * @param {integer}  rowIndex
+	 * @param {Function} callback - (x, pixel)
 	 */
-	forEachPixel ( callback )
+	forEach ( rowIndex, callback )
 	{
-		const { height, width, pixels } = this;
+		const { width, height, pixels } = this;
 
-		for ( let y = 0;  y < height;  y++ )
+		if ( rowIndex < 0  ||  rowIndex >= height )
 		{
-			const { rowPixels } = pixels[y];
+			return;
+		}
 
-			for ( let x = 0;  x < width;  x++ )
-			{
-				callback (x, y, rowPixels[x]);
-			}
+		const row = pixels[rowIndex];
+
+		for ( let x = 0;  x < width;  x++ )
+		{
+			callback (x, row[x]);
 		}
 	}
 
@@ -78,23 +76,12 @@ class Sprite
 			return -1;
 		}
 
-		if ( y < 0  ||  y >= MAX_SPRITE_HEIGHT )
+		if ( y < 0 )
 		{
 			return -1;
 		}
 
-		return this.pixels[y].rowPixels[x];
-	}
-
-	/**
-	 * Get row pixel color index.
-	 *
-	 * @param   {integer} rowIndex
-	 * @returns {integer}
-	 */
-	getRowColor ( rowIndex )
-	{
-		return this.pixels[rowIndex].rowColor;
+		return this.pixels[y][x];
 	}
 }
 

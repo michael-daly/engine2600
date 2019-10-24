@@ -23,7 +23,6 @@ module.exports =
 			'~/core':        path.resolve (__dirname, './src/core'),
 			'~/palettes':    path.resolve (__dirname, './src/core/palettes'),
 			'~/playfield':   path.resolve (__dirname, './src/playfield'),
-			'~/sprite':      path.resolve (__dirname, './src/sprite'),
 			'~/player':      path.resolve (__dirname, './src/player'),
 			'~/missileBall': path.resolve (__dirname, './src/missileBall'),
 			'~/utility':     path.resolve (__dirname, './src/utility'),

@@ -1,7 +1,7 @@
-const VALID_WIDTHS = Object.freeze ([1, 2, 4, 8]);
+const VALID_WIDTHS = Object.freeze ([0, 1, 2, 4, 8]);
 
-const DEFAULT_BALL_WIDTH  = 1;
-const DEFAULT_BALL_HEIGHT = 1;
+const DEFAULT_BALL_WIDTH  = 0;
+const DEFAULT_BALL_HEIGHT = 0;
 const DEFAULT_BALL_X      = 0;
 const DEFAULT_BALL_Y      = 0;
 

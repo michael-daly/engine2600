@@ -1,9 +1,0 @@
-const MAX_SPRITE_WIDTH  = 8;
-const MAX_SPRITE_HEIGHT = 32;
-
-
-export
-{
-	MAX_SPRITE_HEIGHT,
-	MAX_SPRITE_WIDTH
-};

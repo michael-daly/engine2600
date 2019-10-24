@@ -1,14 +1,13 @@
+import Tilemap from '~/playfield/Tilemap.js';
+
 import { getColor }     from '~/palettes/palettes.js';
+import { coordToTile }  from '~/utility/snapCoord.js';
 import { createArray }  from '~/utility/createArray.js';
 import { drawFillRect } from '~/utility/fillDraw.js';
-
 
 import
 {
 	TILE_WIDTH,
-
-	PF_WIDTH_TILES,
-	PF_HEIGHT_PIXELS,
 
 	DEFAULT_PF_X,
 	DEFAULT_PF_Y,
@@ -22,34 +21,14 @@ from '~/playfield/constants.js';
 class Playfield
 {
 	/**
-	 * @param {integer} [tileHeight] - The height of a playfield tile -- must be a divisor of 192.
+	 * @param {Tilemap} [tilemap]
 	 */
-	constructor ( tileHeight = 16 )
+	constructor ( tilemap = null )
 	{
-		if ( PF_HEIGHT_PIXELS % tileHeight !== 0 )
-		{
-			throw new Error (`\`tileHeight\` must be a divisor of ${PF_HEIGHT_PIXELS}`);
-		}
-
-		const width  = PF_WIDTH_TILES;
-		const height = PF_HEIGHT_PIXELS / tileHeight;
-
-		// Initialize tile array with the all tiles set to 0, and all the colors set to their defaults.
-		this.tiles = createArray (height, () =>
-		{
-			return { bgColor: 0, tileColor: 1, rowTiles: createArray (width, () => 0) };
-		});
-
-		// Static properties -- don't change them.
-		this.tileWidth  = TILE_WIDTH;
-		this.tileHeight = tileHeight;
-
-		// Playfield width and height in tiles.
-		this.width  = width;
-		this.height = height;
-
-		this.x = DEFAULT_PF_X;
-		this.y = DEFAULT_PF_Y;
+		this.tilemap         = tilemap;
+		this.backgroundColor = 0;
+		this.tileColor       = 1;
+		this.y               = DEFAULT_PF_Y;
 
 		// If this is true, this instance has been disposed of, so don't try to use it.
 		this.isDeleted = false;
@@ -60,196 +39,51 @@ class Playfield
 	 */
 	delete ()
 	{
-		delete this.tiles;
-		delete this.tileHeight;
-		delete this.height;
+		delete this.tilemap;
+		delete this.backgroundColor;
+		delete this.tileColor;
+		delete this.y;
 
 		this.isDeleted = true;
 	}
 
 	/**
-	 * Call callback on each row.
-	 *
-	 * @param {Function} callback - (rowIndex, row)
-	 */
-	forEachRow ( callback )
-	{
-		const { height, tiles } = this;
-
-		for ( let y = 0;  y < height;  y++ )
-		{
-			callback (y, tiles[y]);
-		}
-	}
-
-	/**
-	 * Call callback on each tile.
-	 *
-	 * @param {Function} callback - (x, y, tile, rowTiles)
-	 */
-	forEachTile ( callback )
-	{
-		const { height, width, tiles } = this;
-
-		for ( let y = 0;  y < height;  y++ )
-		{
-			const { rowTiles } = tiles[y];
-
-			for ( let x = 0;  x < width;  x++ )
-			{
-				callback (x, y, rowTiles[x], rowTiles);
-			}
-		}
-	}
-
-	/**
-	 * Reset all tiles to 0.
-	 */
-	clearTiles ()
-	{
-		this.forEachTile (( x, y, tile, rowTiles ) =>
-		{
-			rowTiles[x] = 0;
-		});
-	}
-
-	/**
-	 * Get the tile bit at (x, y).
-	 *
-	 * @param {integer} x
-	 * @param {integer} y
-	 *
-	 * @returns {-1|0|1} The tile bit at (x, y) or -1 if the tile is out of bounds.
-	 */
-	getTile ( x, y )
-	{
-		if ( x < 0  ||  x >= this.width )
-		{
-			return -1;
-		}
-
-		if ( y < 0  ||  y >= this.height )
-		{
-			return -1;
-		}
-
-		return this.tiles[y].rowTiles[x];
-	}
-
-	/**
-	 * Get row background color index.
-	 *
-	 * @param   {integer} rowIndex
-	 * @returns {integer}
-	 */
-	getBackgroundColor ( rowIndex )
-	{
-		return this.tiles[rowIndex].bgColor;
-	}
-
-	/**
-	 * Get row tile color index.
-	 *
-	 * @param   {integer} rowIndex
-	 * @returns {integer}
-	 */
-	getTileColor ( rowIndex )
-	{
-		return this.tiles[rowIndex].tileColor;
-	}
-
-	/**
-	 * Set the tile bit at (x, y).
-	 *
-	 * @param {integer} x
-	 * @param {integer} y
-	 * @param {0|1}     bool - 0 for no tile, 1 for tile.
-	 */
-	setTile ( x, y, bool )
-	{
-		if ( x < 0  ||  x >= this.width )
-		{
-			return;
-		}
-
-		if ( y < 0  ||  y >= this.height )
-		{
-			return;
-		}
-
-		this.tiles[y].rowTiles[x] = +(!!bool);
-	}
-
-	/**
-	 * Set the background color index for all rows.
-	 *
-	 * @param {integer} colorIndex
-	 */
-	setBackgroundColor ( colorIndex )
-	{
-		this.forEachRow (rowIndex =>
-		{
-			this.setRowBGColor (rowIndex, colorIndex);
-		});
-	}
-
-	/**
-	 * Set the tile color index for all rows.
-	 *
-	 * @param {integer} colorIndex
-	 */
-	setTileColor ( colorIndex )
-	{
-		this.forEachRow (rowIndex =>
-		{
-			this.setRowTileColor (rowIndex, colorIndex);
-		});
-	}
-
-	/**
-	 * Set a row's background color index.
-	 *
-	 * @param {integer} rowIndex
-	 * @param {integer} colorIndex
-	 */
-	setRowBGColor ( rowIndex, colorIndex )
-	{
-		this.tiles[rowIndex].bgColor = colorIndex;
-	}
-
-	/**
-	 * Set a row's tile color index.
-	 *
-	 * @param {integer} rowIndex
-	 * @param {integer} colorIndex
-	 */
-	setRowTileColor ( rowIndex, colorIndex )
-	{
-		this.tiles[rowIndex].tileColor = colorIndex;
-	}
-
-	/**
 	 * Draws the playfield on a canvas context.
 	 *
-	 * @param {CanvasRenderingContext2D} context - The canvas context to draw this on.
-	 * @param {string}                   palette - The color palette to draw this with.
+	 * @param {CanvasRenderingContext2D} context  - The canvas context to draw this on.
+	 * @param {string}                   palette  - The color palette to draw this with.
+	 * @param {integer}                  scanline - The scanline we're currently rendering.
 	 */
-	render ( context, palette )
+	render ( context, palette, scanline )
 	{
-		const { tileWidth, tileHeight, x, y } = this;
+		const { tilemap, backgroundColor, tileColor, y } = this;
 
-		this.forEachTile (( tileX, tileY, tile, rowTiles ) =>
+		if ( tilemap === null )
 		{
-			const bgRGBA   = getColor (palette, this.getBackgroundColor (tileY));
-			const tileRGBA = getColor (palette, this.getTileColor (tileY));
+			return;
+		}
 
-			const drawX = (tileX * tileWidth)  + x;
-			const drawY = (tileY * tileHeight) + y;
+		const { height, tileHeight } = tilemap;
 
-			drawFillRect (context, tile ? tileRGBA : bgRGBA, drawX, drawY, tileWidth, tileHeight);
+		if ( scanline < y  ||  scanline >= y + (height * tileHeight) )
+		{
+			return;
+		}
+
+		const tileY    = coordToTile (scanline, tileHeight);
+		const bgRGBA   = getColor (palette, backgroundColor);
+		const tileRGBA = getColor (palette, tileColor);
+
+		tilemap.forEach (tileY, ( tileX, tile ) =>
+		{
+			const colorRGBA = (tile ? tileRGBA : bgRGBA);
+
+			drawFillRect (context, colorRGBA, tileX * TILE_WIDTH, scanline, TILE_WIDTH, 1);
 		});
 	}
 }
+
+window.windex = 20;
 
 
 export default Playfield;

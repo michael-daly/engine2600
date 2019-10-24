@@ -62,7 +62,8 @@ class Playfield
 		}
 
 		const { height, tileHeight } = tilemap;
-		const relativeY              = scanline - y;
+
+		const relativeY = scanline - y;
 
 		if ( scanline < y  ||  scanline >= relativeY + (height * tileHeight) )
 		{

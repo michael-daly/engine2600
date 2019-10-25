@@ -15,8 +15,7 @@ from '~/missileBall/constants.js';
 
 import { PIXEL_WIDTH, PIXEL_HEIGHT } from '~/core/constants.js';
 
-import { drawFillRect } from '~/utility/fillDraw.js';
-import { getColor }     from '~/palettes/palettes.js';
+import { getColor } from '~/palettes/palettes.js';
 
 
 /**
@@ -67,20 +66,20 @@ class MissileBall
 	}
 
 	/**
-	 * Draws this on a canvas context.
+	 * Draws this on a buffer.
 	 *
-	 * @param {CanvasRenderingContext2D} context   - The canvas context to draw this on.
-	 * @param {integer[]}                colorRGBA - The RGBA color to draw this as.
-	 * @param {integer}                  scanline  - The scanline we're currently rendering.
+	 * @param {RenderBuffer} renderBuffer - The buffer to draw this on.
+	 * @param {integer[]}    colorRGBA    - The RGBA color to draw this as.
+	 * @param {integer}      scanline     - The scanline we're currently rendering.
 	 */
-	render ( context, colorRGBA, scanline )
+	render ( renderBuffer, colorRGBA, scanline )
 	{
 		if ( !this.isLineRendered (scanline) )
 		{
 			return;
 		}
 
-		drawFillRect (context, colorRGBA, this.x, scanline, this.drawWidth, this.drawHeight);
+		renderBuffer.drawHorizontalLine (colorRGBA, this.x, scanline, this.drawWidth);
 	}
 
 	set width ( width )

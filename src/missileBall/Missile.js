@@ -1,7 +1,5 @@
-import MissileBall from '~/missileBall/MissileBall.js';
-
-import { drawFillRect } from '~/utility/fillDraw.js';
-import { getColor }     from '~/palettes/palettes.js';
+import MissileBall  from '~/missileBall/MissileBall.js';
+import { getColor } from '~/palettes/palettes.js';
 
 
 /**
@@ -24,24 +22,7 @@ class Missile extends MissileBall
 		this.modifier = 0;
 	}
 
-	/**
-	 * Draws this on a canvas context.
-	 *
-	 * @param {CanvasRenderingContext2D} context   - The canvas context to draw this on.
-	 * @param {integer[]}                colorRGBA - The RGBA color to draw this as.
-	 * @param {integer}                  scanline  - The scanline we're currently rendering.
-	 */
-	render ( context, colorRGBA, scanline )
-	{
-		if ( !this.isLineRendered (scanline) )
-		{
-			return;
-		}
-
-		// TODO: Handle this.modifier exceptions
-
-		drawFillRect (context, colorRGBA, this.x, scanline, this.drawWidth, this.drawHeight);
-	}
+	// TODO: Custom render method to handle this.modifier exceptions
 }
 
 

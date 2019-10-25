@@ -1,7 +1,8 @@
-import Playfield from '~/playfield/Playfield.js';
-import Player    from '~/player/Player.js';
-import Ball      from '~/missileBall/Ball.js';
-import Missile   from '~/missileBall/Missile.js';
+import RenderBuffer from '~/core/RenderBuffer.js';
+import Playfield    from '~/playfield/Playfield.js';
+import Player       from '~/player/Player.js';
+import Ball         from '~/missileBall/Ball.js';
+import Missile      from '~/missileBall/Missile.js';
 
 import EventEmitter from '~/utility/classes/EventEmitter.js';
 import createCanvas from '~/utility/createCanvas.js';
@@ -27,8 +28,9 @@ class Engine2600
 	{
 		const canvas = createCanvas (elementID, scale);
 
-		this.canvas  = canvas;
-		this.context = canvas.getContext ('2d');
+		this.canvas       = canvas;
+		this.context      = canvas.getContext ('2d');
+		this.renderBuffer = new RenderBuffer (canvas);
 
 		// For hooking into the update loop.
 		this.events = new EventEmitter ();
@@ -90,6 +92,7 @@ class Engine2600
 		delete this.parent;
 		delete this.canvas;
 		delete this.context;
+		delete this.renderBuffer;
 		delete this.scale;
 		delete this.events;
 		delete this.playfield;
@@ -147,7 +150,7 @@ class Engine2600
 
 		const
 		{
-			context,
+			renderBuffer,
 			palette,
 			playfield,
 			ball,
@@ -186,11 +189,11 @@ class Engine2600
 					playfield.tileColor = pfTileColors[tileY];
 				}
 
-				playfield.render (context, palette, scanline);
+				playfield.render (renderBuffer, palette, scanline);
 			}
 
 			// Ball color is dependent on the playfield's tile color.
-			ball.render (context, getColor (palette, playfield.tileColor), scanline);
+			ball.render (renderBuffer, getColor (palette, playfield.tileColor), scanline);
 
 			/* Render player0 and player1 */
 
@@ -205,15 +208,18 @@ class Engine2600
 				const missile    = missiles[p];
 				const playerRelY = scanline - player.y;
 
-				if ( playerRelY < colors.length )
+				if ( playerRelY >= 0  &&  playerRelY < colors.length )
 				{
 					player.color = colors[playerRelY];
 				}
 
-				player.render (context, palette, scanline);
-				missile.render (context, getColor (palette, player.color), scanline);
+				player.render (renderBuffer, palette, scanline);
+				missile.render (renderBuffer, getColor (palette, player.color), scanline);
+
 			}
 		}
+
+		this.context.putImageData (renderBuffer.imageData, 0, 0);
 
 		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't rebind
 		// the method every single loop.

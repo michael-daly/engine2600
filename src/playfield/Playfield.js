@@ -1,7 +1,6 @@
 import { getColor }     from '~/palettes/palettes.js';
 import { coordToTile }  from '~/utility/snapCoord.js';
 import { createArray }  from '~/utility/createArray.js';
-import { drawFillRect } from '~/utility/fillDraw.js';
 
 import
 {
@@ -46,13 +45,13 @@ class Playfield
 	}
 
 	/**
-	 * Draws the playfield on a canvas context.
+	 * Draws the playfield on a buffer.
 	 *
-	 * @param {CanvasRenderingContext2D} context  - The canvas context to draw this on.
-	 * @param {string}                   palette  - The color palette to draw this with.
-	 * @param {integer}                  scanline - The scanline we're currently rendering.
+	 * @param {RenderBuffer} renderBuffer - The buffer to draw this on.
+	 * @param {string}       palette      - The color palette to draw this with.
+	 * @param {integer}      scanline     - The scanline we're currently rendering.
 	 */
-	render ( context, palette, scanline )
+	render ( renderBuffer, palette, scanline )
 	{
 		const { tilemap, backgroundColor, tileColor, y } = this;
 
@@ -78,7 +77,7 @@ class Playfield
 		{
 			const colorRGBA = (tile ? tileRGBA : bgRGBA);
 
-			drawFillRect (context, colorRGBA, tileX * TILE_WIDTH, scanline, TILE_WIDTH, 1);
+			renderBuffer.drawHorizontalLine (colorRGBA, tileX * TILE_WIDTH, scanline, TILE_WIDTH);
 		});
 	}
 }

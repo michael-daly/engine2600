@@ -1,11 +1,8 @@
 import Sprite from '~/player/Sprite.js';
 
 import { DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y, DEFAULT_PLAYER_COL } from '~/player/constants.js';
-
 import { PIXEL_WIDTH, PIXEL_HEIGHT } from '~/core/constants.js';
-
-import { drawFillRect } from '~/utility/fillDraw.js';
-import { getColor }     from '~/palettes/palettes.js';
+import { getColor } from '~/palettes/palettes.js';
 
 
 class Player
@@ -38,13 +35,13 @@ class Player
 	}
 
 	/**
-	 * Draws the player's sprite on a canvas context.
+	 * Draws the player's sprite on a buffer.
 	 *
-	 * @param {CanvasRenderingContext2D} context  - The canvas context to draw this on.
-	 * @param {string}                   palette  - The color palette to draw this with.
-	 * @param {integer}                  scanline - The scanline we're currently rendering.
+	 * @param {RenderBuffer} renderBuffer - The buffer to draw this on.
+	 * @param {string}       palette      - The color palette to draw this with.
+	 * @param {integer}      scanline     - The scanline we're currently rendering.
 	 */
-	render ( context, palette, scanline )
+	render ( renderBuffer, palette, scanline )
 	{
 		const { sprite, color, x, y } = this;
 
@@ -59,7 +56,7 @@ class Player
 		{
 			if ( pixel )
 			{
-				drawFillRect (context, colorRGBA, pixelX + x, scanline, PIXEL_WIDTH, PIXEL_HEIGHT);
+				renderBuffer.drawHorizontalLine (colorRGBA, pixelX + x, scanline, PIXEL_WIDTH);
 			}
 		});
 	}

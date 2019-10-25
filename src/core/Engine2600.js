@@ -146,7 +146,7 @@ class Engine2600
 		}
 
 		// Clear the canvas so we can draw the updated graphics.
-		this.clearCanvas ();
+		// this.clearCanvas ();
 
 		const
 		{

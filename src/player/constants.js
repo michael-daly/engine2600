@@ -2,7 +2,7 @@
 
 const DEFAULT_PLAYER_X   = 0;
 const DEFAULT_PLAYER_Y   = 0;
-const DEFAULT_PLAYER_COL = 128;
+const DEFAULT_PLAYER_COL = 16;
 
 /* Sprite constants */
 

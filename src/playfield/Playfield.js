@@ -80,6 +80,46 @@ class Playfield
 			renderBuffer.drawHorizontalLine (colorRGBA, tileX * TILE_WIDTH, scanline, TILE_WIDTH);
 		});
 	}
+
+	/**
+	 * Returns tilemap width in tiles.
+	 */
+	get width ()
+	{
+		const { tilemap } = this;
+
+		return (tilemap === null) ? 0 : tilemap.width;
+	}
+
+	/**
+	 * Returns tilemap height in tiles.
+	 */
+	get height ()
+	{
+		const { tilemap } = this;
+
+		return (tilemap === null) ? 0 : tilemap.height;
+	}
+
+	/**
+	 * Returns tilemap width in pixels.
+	 */
+	get pixelWidth ()
+	{
+		const { tilemap } = this;
+
+		return (tilemap === null) ? 0 : (tilemap.width * tilemap.tileWidth);
+	}
+
+	/**
+	 * Returns tilemap height in pixels.
+	 */
+	get pixelHeight ()
+	{
+		const { tilemap } = this;
+
+		return (tilemap === null) ? 0 : (tilemap.height * tilemap.tileHeight);
+	}
 }
 
 

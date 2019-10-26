@@ -145,19 +145,21 @@ class Engine2600
 			return;
 		}
 
-		// Clear the canvas so we can draw the updated graphics.
-		// this.clearCanvas ();
-
 		const
 		{
+			events,
+
 			renderBuffer,
 			palette,
+
 			playfield,
 			ball,
+
 			player0,
 			player1,
 			missile0,
 			missile1,
+
 			pfBGColors,
 			pfTileColors,
 			player0Colors,
@@ -165,9 +167,13 @@ class Engine2600
 		}
 		= this;
 
+		events.emit ('renderStart');
+
 		// Go scanline-by-scanline to emulate how the Atari 2600 draws graphics.
 		for ( let scanline = 0;  scanline < CANVAS_HEIGHT;  scanline++ )
 		{
+			events.emit ('scanline', scanline);
+
 			// TODO: Score/HUD stuff under the playfield.
 
 			if ( scanline < playfield.y  ||  scanline >= PF_HEIGHT_PIXELS )
@@ -222,9 +228,10 @@ class Engine2600
 
 				player.render (renderBuffer, palette, scanline);
 				missile.render (renderBuffer, getColor (palette, player.color), scanline);
-
 			}
 		}
+
+		events.emit ('renderEnd');
 
 		this.context.putImageData (renderBuffer.imageData, 0, 0);
 

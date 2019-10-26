@@ -7,7 +7,7 @@ import Missile      from '~/missileBall/Missile.js';
 import EventEmitter from '~/utility/classes/EventEmitter.js';
 import createCanvas from '~/utility/createCanvas.js';
 
-import { CANVAS_WIDTH, CANVAS_HEIGHT, TICK_RATE } from '~/core/constants.js';
+import { CANVAS_HEIGHT, TICK_RATE } from '~/core/constants.js';
 
 import { coordToTile }      from '~/utility/snapCoord.js';
 import { getColor }         from '~/palettes/palettes.js';
@@ -108,14 +108,6 @@ class Engine2600
 		delete this.isRunning;
 
 		this.isDeleted = true;
-	}
-
-	/**
-	 * Used in the render loop.
-	 */
-	clearCanvas ()
-	{
-		this.context.clearRect (0, 0, this.width, this.height);
 	}
 
 	/**

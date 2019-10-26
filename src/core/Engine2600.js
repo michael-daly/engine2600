@@ -9,9 +9,9 @@ import createCanvas from '~/utility/createCanvas.js';
 
 import { CANVAS_WIDTH, CANVAS_HEIGHT, TICK_RATE } from '~/core/constants.js';
 
-import { DEFAULT_PF_X } from '~/playfield/constants.js';
-import { coordToTile }  from '~/utility/snapCoord.js';
-import { getColor }     from '~/palettes/palettes.js';
+import { coordToTile }      from '~/utility/snapCoord.js';
+import { getColor }         from '~/palettes/palettes.js';
+import { PF_HEIGHT_PIXELS } from '~/playfield/constants.js';
 
 
 /**
@@ -170,7 +170,7 @@ class Engine2600
 		{
 			// TODO: Score/HUD stuff under the playfield.
 
-			if ( scanline < playfield.y  ||  scanline >= playfield.pixelHeight )
+			if ( scanline < playfield.y  ||  scanline >= PF_HEIGHT_PIXELS )
 			{
 				continue;
 			}

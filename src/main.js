@@ -1,6 +1,15 @@
-import MakerApp  from '~/core/MakerApp.js';
-import Playfield from '~/core/Playfield.js';
+// (Temp test file)
 
-window.app = new MakerApp ('canvas-parent', 2.0, 'SECAM');
+import Engine2600 from '~/core/Engine2600.js';
+import TIAVideo   from '~/core/TIAVideo.js';
 
-app.addPlayfield (1);
+import createCanvas from '~/utility/createCanvas.js';
+
+
+const canvas = createCanvas ('canvas-parent', 3.0);
+
+const tiaVideo = new TIAVideo ();
+const app = new Engine2600 (canvas, tiaVideo);
+
+window.tiaVideo = tiaVideo;
+window.app = app;

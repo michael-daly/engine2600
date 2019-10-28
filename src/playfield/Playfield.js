@@ -1,83 +1,69 @@
-import { getColor }     from '~/palettes/palettes.js';
-import { coordToTile }  from '~/utility/snapCoord.js';
-import { createArray }  from '~/utility/createArray.js';
+import GridRow from '~/core/GridRow.js';
+
+import { getColor } from '~/palettes/palettes.js';
 
 import
 {
 	TILE_WIDTH,
 
-	DEFAULT_PF_X,
-	DEFAULT_PF_Y,
+	PF_WIDTH_TILES,
+
+	DEF_PF_BG_COL,
+	DEF_PF_TILE_COL
 }
 from '~/playfield/constants.js';
 
 
-/**
- * Used for storing/updating playfield data for the game.
- */
 class Playfield
 {
 	/**
-	 * @param {Tilemap} [tilemap]
+	 * @param {integer} backgroundColor
+	 * @param {integer} tileColor
 	 */
-	constructor ( tilemap = null )
+	constructor ( backgroundColor = DEF_PF_BG_COL, tileColor = DEF_PF_TILE_COL )
 	{
-		this.tilemap         = tilemap;
-		this.backgroundColor = 0;
-		this.tileColor       = 1;
-		this.y               = DEFAULT_PF_Y;
-
-		// If this is true, this instance has been disposed of, so don't try to use it.
-		this.isDeleted = false;
+		this.tiles           = new GridRow (PF_WIDTH_TILES);
+		this.backgroundColor = backgroundColor;
+		this.tileColor       = tileColor;
 	}
 
 	/**
-	 * Deletes all properties and sets isDeleted to true.
+	 * @param   {integer} index
+	 * @returns {0|1}
 	 */
-	delete ()
+	getTile ( index )
 	{
-		delete this.tilemap;
-		delete this.backgroundColor;
-		delete this.tileColor;
-		delete this.y;
-
-		this.isDeleted = true;
+		return this.tiles.getBlock (index);
 	}
 
 	/**
-	 * Draws the playfield on a buffer.
+	 * Used for changing playfield graphics.
 	 *
-	 * @param {RenderBuffer} renderBuffer - The buffer to draw this on.
-	 * @param {string}       palette      - The color palette to draw this with.
-	 * @param {integer}      scanline     - The scanline we're currently rendering.
+	 * @param {integer} index
+	 * @param {0|1}     bool
+	 */
+	setTile ( index, bool )
+	{
+		this.tiles.setBlock (index, bool);
+	}
+
+	/**
+	 * @param {RenderBuffer} renderBuffer
+	 * @param {string}       palette
+	 * @param {integer}      scanline
 	 */
 	render ( renderBuffer, palette, scanline )
 	{
-		const { tilemap, backgroundColor, tileColor, y } = this;
+		const { tiles, backgroundColor, tileColor } = this;
 
-		if ( tilemap === null )
-		{
-			return;
-		}
-
-		const { height, tileHeight } = tilemap;
-
-		const relativeY = scanline - y;
-
-		if ( scanline < y  ||  scanline >= relativeY + (height * tileHeight) )
-		{
-			return;
-		}
-
-		const tileY    = coordToTile (relativeY, tileHeight);
 		const bgRGBA   = getColor (palette, backgroundColor);
 		const tileRGBA = getColor (palette, tileColor);
 
-		tilemap.forEach (tileY, ( tileX, tile ) =>
+		tiles.forEach (( tileX, tile ) =>
 		{
 			const colorRGBA = (tile ? tileRGBA : bgRGBA);
 
-			renderBuffer.drawHorizontalLine (colorRGBA, tileX * TILE_WIDTH, scanline, TILE_WIDTH);
+			renderBuffer.drawHorizontalLine (tileX * TILE_WIDTH, scanline, TILE_WIDTH, colorRGBA);
 		});
 	}
 }

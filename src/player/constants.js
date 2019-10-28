@@ -1,19 +1,15 @@
-/* Player constants */
+const PLAYER_WIDTH = 8;
 
-const DEFAULT_PLAYER_X   = 0;
-const DEFAULT_PLAYER_Y   = 0;
-const DEFAULT_PLAYER_COL = 16;
-
-/* Sprite constants */
-
-const MAX_SPRITE_WIDTH = 8;
+const DEF_PLAYER_X   = 0;
+const DEF_PLAYER_Y   = 0;
+const DEF_PLAYER_COL = 7;
 
 
 export
 {
-	DEFAULT_PLAYER_X,
-	DEFAULT_PLAYER_Y,
-	DEFAULT_PLAYER_COL,
+	PLAYER_WIDTH,
 
-	MAX_SPRITE_WIDTH,
+	DEF_PLAYER_X,
+	DEF_PLAYER_Y,
+	DEF_PLAYER_COL,
 };

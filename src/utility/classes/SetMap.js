@@ -90,6 +90,8 @@ class SetMap
 	 */
 	has ( key, value )
 	{
+		const { map } = this;
+
 		if ( arguments.length === 1 )
 		{
 			return map.has (key);

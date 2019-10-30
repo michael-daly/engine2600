@@ -26,18 +26,11 @@ class MissileBall
 	}
 
 	/**
-	 * @param {RenderBuffer} renderBuffer
-	 * @param {ColorRGBA}    colorRGBA
-	 * @param {integer}      scanline
+	 * Checks if this is an X coordinate is within the missile's/ball's render area.
 	 */
-	render ( renderBuffer, colorRGBA, scanline )
+	isRenderCoord ( coordX )
 	{
-		if ( !this.enabled )
-		{
-			return;
-		}
-
-		renderBuffer.drawHorizontalLine (this.x, scanline, this.drawWidth, colorRGBA);
+		return coordX >= this.x  &&  coordX < this.x + this.width;
 	}
 
 	get x ()

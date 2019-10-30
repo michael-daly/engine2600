@@ -46,26 +46,6 @@ class Playfield
 	{
 		this.tiles.setBlock (index, bool);
 	}
-
-	/**
-	 * @param {RenderBuffer} renderBuffer
-	 * @param {string}       palette
-	 * @param {integer}      scanline
-	 */
-	render ( renderBuffer, palette, scanline )
-	{
-		const { tiles, backgroundColor, tileColor } = this;
-
-		const bgRGBA   = getColor (palette, backgroundColor);
-		const tileRGBA = getColor (palette, tileColor);
-
-		tiles.forEach (( tileX, tile ) =>
-		{
-			const colorRGBA = (tile ? tileRGBA : bgRGBA);
-
-			renderBuffer.drawHorizontalLine (tileX * TILE_WIDTH, scanline, TILE_WIDTH, colorRGBA);
-		});
-	}
 }
 
 

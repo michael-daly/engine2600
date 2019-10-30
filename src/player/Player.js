@@ -41,25 +41,14 @@ class Player
 	}
 
 	/**
-	 * @param {RenderBuffer} renderBuffer
-	 * @param {string}       palette
-	 * @param {integer}      scanline
+	 * Converts a scanline X coordinate to a pixel value.
+	 *
+	 * @param   {integer} coordX
+	 * @returns {-1|0|1} -1 if coordinate is not where player is being drawn.
 	 */
-	render ( renderBuffer, palette, scanline )
+	coordToPixel ( coordX )
 	{
-		const { graphics, color, x } = this;
-
-		const colorRGBA = getColor (palette, color);
-
-		graphics.forEach (( pixelX, pixel ) =>
-		{
-			if ( pixel )
-			{
-				const drawX = x + (pixelX * PIXEL_WIDTH);
-
-				renderBuffer.drawHorizontalLine (drawX, scanline, PIXEL_WIDTH, colorRGBA);
-			}
-		});
+		return this.getPixel (coordX - this.x);
 	}
 
 	get x ()

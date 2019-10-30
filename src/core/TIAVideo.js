@@ -1,10 +1,9 @@
-import has from 'has';
-
-import TIACollision  from '~/core/TIACollision.js';
-import EventEmitter  from '~/utility/classes/EventEmitter.js';
-import Playfield     from '~/playfield/Playfield.js';
-import Player        from '~/player/Player.js';
-import MissileBall   from '~/missileBall/MissileBall.js';
+import RenderBuffer from '~/core/RenderBuffer.js';
+import EventEmitter from '~/utility/classes/EventEmitter.js';
+import TIAObjects   from '~/core/TIAObjects.js';
+import TIACollision from '~/core/TIACollision.js';
+import Player       from '~/player/Player.js';
+import MissileBall  from '~/missileBall/MissileBall.js';
 
 import { coordToTile } from '~/utility/snapCoord.js';
 import { getColor }    from '~/palettes/palettes.js';
@@ -18,26 +17,29 @@ import { TILE_WIDTH } from '~/playfield/constants.js';
 class TIAVideo
 {
 	/**
-	 * @param {string} palette
+	 * @param {integer} width
+	 * @param {integer} height
+	 * @param {string}  palette
 	 */
-	constructor ( palette = 'NTSC' )
+	constructor ( width, height, palette = 'NTSC' )
 	{
 		this.palette      = palette;
+		this.renderBuffer = new RenderBuffer (width, height);
 		this.events       = new EventEmitter ();
-		this.tiaCollision = new TIACollision ();
-		this.playfield    = new Playfield ();
-		this.player0      = new Player ();
-		this.player1      = new Player ();
-		this.ball         = new MissileBall ();
-		this.missile0     = new MissileBall ();
-		this.missile1     = new MissileBall ();
+		this.objects      = new TIAObjects ();
+		this.collision    = new TIACollision ();
 		this.scanline     = 0;
 		this.pixel        = 0;
 	}
 
-	renderPlayfield ( renderBuffer )
+	/**
+	 * @private
+	 */
+	_renderPlayfield ()
 	{
-		const { playfield, tiaCollision, scanline, pixel, palette } = this;
+		const { renderBuffer, objects, collision, scanline, pixel, palette } = this;
+
+		const { playfield } = objects;
 
 		const tileX = coordToTile (pixel, TILE_WIDTH);
 		const tile  = playfield.getTile (tileX);
@@ -53,13 +55,18 @@ class TIAVideo
 
 		if ( tile === 1 )
 		{
-			tiaCollision.addObjectToPixel ('playfield');
+			collision.addObjectToPixel ('playfield');
 		}
 	}
 
-	renderBall ( renderBuffer )
+	/**
+	 * @private
+	 */
+	_renderBall ()
 	{
-		const { playfield, ball, tiaCollision, scanline, pixel, palette } = this;
+		const { renderBuffer, objects, collision, scanline, pixel, palette } = this;
+
+		const { playfield, ball } = objects;
 
 		if ( !ball.isRenderCoord (pixel)  ||  !ball.enabled )
 		{
@@ -68,41 +75,47 @@ class TIAVideo
 
 		renderBuffer.drawPixel (pixel, scanline, getColor (palette, playfield.tileColor));
 
-		tiaCollision.addObjectToPixel ('ball');
+		collision.addObjectToPixel ('ball');
 	}
 
-	renderPlayer ( renderBuffer, playerKey )
+	/**
+	 * @param {integer} number - Either player0 or player1.
+	 *
+	 * @private
+	 */
+	_renderPlayer ( number )
 	{
-		const player = this[playerKey];
+		const { renderBuffer, objects, collision, scanline, pixel, palette } = this;
+
+		const player = objects.getPlayer (number);
 
 		if ( !(player instanceof Player) )
 		{
 			return;
 		}
 
-		const { tiaCollision, scanline, pixel, palette } = this;
-
 		if ( player.coordToPixel (pixel) === 1 )
 		{
 			renderBuffer.drawPixel (pixel, scanline, getColor (palette, player.color));
 
-			tiaCollision.addObjectToPixel (playerKey);
+			collision.addObjectToPixel (`player${number}`);
 		}
 	}
 
 	/**
-	 * @param   {RenderBuffer} renderBuffer
 	 * @returns {ImageData}
 	 */
-	render ( renderBuffer )
+	render ()
 	{
-		const { events, palette } = this;
-		const { tiaCollision, playfield, player0, player1, ball, missile0, missile1 } = this;
+		const { renderBuffer, palette, events, objects, collision }     = this;
+		const { playfield, player0, player1, ball, missile0, missile1 } = this;
 
 		// Fallback color if nothing gets drawn.
 		const baseColor = getColor (palette, 0);
 
 		this.scanline = 0;
+
+		events.emit ('renderStart');
 
 		// Scanline-by-scanline.
 		for ( let scanline = 0;  scanline < renderBuffer.height;  scanline++ )
@@ -121,15 +134,17 @@ class TIAVideo
 
 				renderBuffer.drawPixel (pixel, scanline, baseColor);
 
-				this.renderPlayfield (renderBuffer);
-				this.renderBall (renderBuffer);
-				this.renderPlayer (renderBuffer, 'player1');
-				this.renderPlayer (renderBuffer, 'player0');
+				this._renderPlayfield ();
+				this._renderBall ();
+				this._renderPlayer (1);
+				this._renderPlayer (0);
 
-				tiaCollision.setPixelCollisions ();
-				tiaCollision.clearPixelObjects ();
+				collision.setPixelCollisions ();
+				collision.clearPixelObjects ();
 			}
 		}
+
+		events.emit ('renderEnd');
 
 		return renderBuffer.imageData;
 	}

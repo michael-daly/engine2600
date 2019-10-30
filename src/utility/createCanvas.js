@@ -18,7 +18,7 @@ const createCanvas = ( elementID = null, scale = 1.0 ) =>
 	// Scale the canvas up and make sure it's not blurry.
 	canvas.style['image-rendering']  = 'crisp-edges';
 	canvas.style['transform-origin'] = 'left top';
-	canvas.style['transform']        = `scale(${scale})`;
+	canvas.style['transform']        = `scale(${scale * 2}, ${scale})`;
 
 	if ( elementID !== null )
 	{

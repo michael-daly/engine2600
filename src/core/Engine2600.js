@@ -26,9 +26,6 @@ class Engine2600
 		this.tiaAudio     = tiaAudio;
 		this.renderBuffer = new RenderBuffer (canvas.width, canvas.height);
 
-		// Non-playfield background color.
-		this.borderColor = 0;
-
 		// Pre-bind the update method so we don't rebind it every single loop.
 		this._updateBound = this.update.bind (this);
 

@@ -36,6 +36,14 @@ class ValueLinker
 	}
 
 	/**
+	 * Clears all links between all values.
+	 */
+	clear ()
+	{
+		this.values.clear ();
+	}
+
+	/**
 	 * Check if two values are linked to each other.
 	 *
 	 * @param {*} value1

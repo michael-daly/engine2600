@@ -12,7 +12,7 @@ import { TILE_WIDTH } from '~/playfield/constants.js';
 
 
 /**
- * A class that emulates the behavior of the video portion of the TIA in the Atari 2600.
+ * A class that mimics the behavior of the video portion of the TIA in the Atari 2600.
  */
 class TIAVideo
 {
@@ -79,7 +79,7 @@ class TIAVideo
 	}
 
 	/**
-	 * @param {integer} number - Either player0 or player1.
+	 * @param {0|1} number
 	 *
 	 * @private
 	 */
@@ -103,6 +103,28 @@ class TIAVideo
 	}
 
 	/**
+	 * @param {0|1} number
+	 *
+	 * @private
+	 */
+	_renderMissile ( number )
+	{
+		const { renderBuffer, objects, collision, scanline, pixel, palette } = this;
+
+		const missile = objects.getMissile (number);
+		const player  = objects.getPlayer (number);
+
+		if ( !missile.isRenderCoord (pixel)  ||  !missile.enabled )
+		{
+			return;
+		}
+
+		renderBuffer.drawPixel (pixel, scanline, getColor (palette, player.color));
+
+		collision.addObjectToPixel (`missile${number}`);
+	}
+
+	/**
 	 * @returns {ImageData}
 	 */
 	render ()
@@ -117,7 +139,7 @@ class TIAVideo
 
 		events.emit ('renderStart');
 
-		// Scanline-by-scanline.
+		// Mimic how TIA draws pixels, scanline-by-scanline...
 		for ( let scanline = 0;  scanline < renderBuffer.height;  scanline++ )
 		{
 			// Set the scanline property rather than directly modify it every time so it looks cleaner.
@@ -127,17 +149,30 @@ class TIAVideo
 
 			this.pixel = 0;
 
-			// Pixel-by-pixel.
+			// ...pixel-by-pixel.
 			for ( let pixel = 0;  pixel < renderBuffer.width;  pixel++ )
 			{
 				this.pixel = pixel;
 
 				renderBuffer.drawPixel (pixel, scanline, baseColor);
 
+				/* Render playfield and ball */
+
 				this._renderPlayfield ();
 				this._renderBall ();
+
+				/* Render player1 */
+
 				this._renderPlayer (1);
+				this._renderMissile (1);
+
+				/* Render player0 */
+
 				this._renderPlayer (0);
+				this._renderMissile (0);
+
+				/* Check collisions for all objects at this pixel, then reset pixel object data to
+				   prepare for next pixel check. */
 
 				collision.setPixelCollisions ();
 				collision.clearPixelObjects ();

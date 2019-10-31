@@ -23,25 +23,36 @@ class TIAVideo
 	 */
 	constructor ( width, height, palette = 'NTSC' )
 	{
-		this.palette      = palette;
-		this.renderBuffer = new RenderBuffer (width, height);
-		this.events       = new EventEmitter ();
-		this.objects      = new TIAObjects ();
-		this.collision    = new TIACollision ();
-		this.scanline     = 0;
-		this.pixel        = 0;
+		this.palette           = palette;
+		this.renderBuffer      = new RenderBuffer (width, height);
+		this.events            = new EventEmitter ();
+		this.objects           = new TIAObjects ();
+		this.collision         = new TIACollision ();
+		this.drawPFOverPlayers = false;
+		this.scanline          = 0;
+		this.pixel             = 0;
 	}
 
 	/**
+	 * @param {integer} colorIndex
 	 * @private
 	 */
-	_renderPlayfield ()
+	_renderPixel ( colorIndex )
 	{
-		const { renderBuffer, objects, collision, scanline, pixel, palette } = this;
+		const colorRGBA = getColor (this.palette, colorIndex);
 
-		const { playfield } = objects;
+		this.renderBuffer.drawPixel (this.pixel, this.scanline, colorRGBA);
+	}
 
-		const tileX = coordToTile (pixel, TILE_WIDTH);
+	/**
+	 * @param {"tile"|"background"} tileOrBG
+	 * @private
+	 */
+	_renderPlayfield ( tileOrBG )
+	{
+		const { playfield } = this.objects;
+
+		const tileX = coordToTile (this.pixel, TILE_WIDTH);
 		const tile  = playfield.getTile (tileX);
 
 		if ( tile === -1 )
@@ -49,14 +60,16 @@ class TIAVideo
 			return;
 		}
 
-		const colorRGBA = getColor (palette, tile ? playfield.tileColor : playfield.backgroundColor);
-
-		renderBuffer.drawPixel (pixel, scanline, colorRGBA);
-
-		if ( tile === 1 )
+		if ( tile === 0  &&  tileOrBG === 'background' )
 		{
-			collision.addObjectToPixel ('playfield');
+			this._renderPixel (playfield.backgroundColor);
 		}
+		else if ( tile === 1  &&  tileOrBG === 'tile' )
+		{
+			this._renderPixel (playfield.tileColor);
+			this.collision.addObjectToPixel ('playfield');
+		}
+
 	}
 
 	/**
@@ -64,18 +77,15 @@ class TIAVideo
 	 */
 	_renderBall ()
 	{
-		const { renderBuffer, objects, collision, scanline, pixel, palette } = this;
+		const { playfield, ball } = this.objects;
 
-		const { playfield, ball } = objects;
-
-		if ( !ball.isRenderCoord (pixel)  ||  !ball.enabled )
+		if ( !ball.isRenderCoord (this.pixel)  ||  !ball.enabled )
 		{
 			return;
 		}
 
-		renderBuffer.drawPixel (pixel, scanline, getColor (palette, playfield.tileColor));
-
-		collision.addObjectToPixel ('ball');
+		this._renderPixel (playfield.tileColor);
+		this.collision.addObjectToPixel ('ball');
 	}
 
 	/**
@@ -85,20 +95,17 @@ class TIAVideo
 	 */
 	_renderPlayer ( number )
 	{
-		const { renderBuffer, objects, collision, scanline, pixel, palette } = this;
-
-		const player = objects.getPlayer (number);
+		const player = this.objects.getPlayer (number);
 
 		if ( !(player instanceof Player) )
 		{
 			return;
 		}
 
-		if ( player.coordToPixel (pixel) === 1 )
+		if ( player.coordToPixel (this.pixel) === 1 )
 		{
-			renderBuffer.drawPixel (pixel, scanline, getColor (palette, player.color));
-
-			collision.addObjectToPixel (`player${number}`);
+			this._renderPixel (player.color);
+			this.collision.addObjectToPixel (`player${number}`);
 		}
 	}
 
@@ -109,19 +116,18 @@ class TIAVideo
 	 */
 	_renderMissile ( number )
 	{
-		const { renderBuffer, objects, collision, scanline, pixel, palette } = this;
+		const { objects } = this;
 
 		const missile = objects.getMissile (number);
 		const player  = objects.getPlayer (number);
 
-		if ( !missile.isRenderCoord (pixel)  ||  !missile.enabled )
+		if ( !missile.isRenderCoord (this.pixel)  ||  !missile.enabled )
 		{
 			return;
 		}
 
-		renderBuffer.drawPixel (pixel, scanline, getColor (palette, player.color));
-
-		collision.addObjectToPixel (`missile${number}`);
+		this._renderPixel (player.color);
+		this.collision.addObjectToPixel (`missile${number}`);
 	}
 
 	/**
@@ -156,20 +162,33 @@ class TIAVideo
 
 				renderBuffer.drawPixel (pixel, scanline, baseColor);
 
-				/* Render playfield and ball */
+				this._renderPlayfield ('background');
 
-				this._renderPlayfield ();
-				this._renderBall ();
+				/* Render playfield and ball if we're not drawing it over the player. */
 
-				/* Render player1 */
+				if ( !this.drawPFOverPlayers )
+				{
+					this._renderPlayfield ('tile');
+					this._renderBall ();
+				}
+
+				/* Render player1. */
 
 				this._renderPlayer (1);
 				this._renderMissile (1);
 
-				/* Render player0 */
+				/* Render player0. */
 
 				this._renderPlayer (0);
 				this._renderMissile (0);
+
+				/* Render playfield and ball if we are drawing it over the player. */
+
+				if ( this.drawPFOverPlayers )
+				{
+					this._renderPlayfield ('tile');
+					this._renderBall ();
+				}
 
 				/* Check collisions for all objects at this pixel, then reset pixel object data to
 				   prepare for next pixel check. */

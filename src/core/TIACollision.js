@@ -10,7 +10,7 @@ class TIACollision
 {
 	constructor ()
 	{
-		this.objectsAtPixel = new Set ();
+		this.objectsAtPixel = [];
 		this.collisions     = new ValueLinker ();
 	}
 
@@ -33,7 +33,7 @@ class TIACollision
 	 */
 	clearCollisions ()
 	{
-		this.objectsAtPixel.clear ();
+		this.objectsAtPixel = [];
 		this.collisions.clear ();
 	}
 
@@ -53,10 +53,20 @@ class TIACollision
 	 */
 	addObjectToPixel ( object )
 	{
-		if ( validObjects.has (object) )
+		if ( !validObjects.has (object) )
 		{
-			this.objectsAtPixel.add (object);
+			return;
 		}
+
+		const { values } = this.collisions;
+
+		// Optimization so we don't loop through each object every pixel.
+		if ( values.has (object)  &&  values.get (object).size >= 5 )
+		{
+			return;
+		}
+
+		this.objectsAtPixel.push (object);
 	}
 
 	/**
@@ -64,7 +74,7 @@ class TIACollision
 	 */
 	clearPixelObjects ()
 	{
-		this.objectsAtPixel.clear ();
+		this.objectsAtPixel = [];
 	}
 
 	/**
@@ -73,11 +83,16 @@ class TIACollision
 	setPixelCollisions ()
 	{
 		const { objectsAtPixel } = this;
+		const { length } = objectsAtPixel;
 
-		for ( let object1 of objectsAtPixel )
+		for ( let i = 0;  i < length;  i++ )
 		{
-			for ( let object2 of objectsAtPixel )
+			const object1 = objectsAtPixel[i];
+
+			for ( let j = 0;  j < length;  j++ )
 			{
+				const object2 = objectsAtPixel[j];
+
 				if ( object1 !== object2 )
 				{
 					this.setCollision (object1, object2);

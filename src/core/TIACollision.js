@@ -1,8 +1,6 @@
 import ValueLinker from '~/utility/classes/ValueLinker.js';
 
 
-const validObjects = new Set (['playfield', 'player0', 'player1', 'ball', 'missile0', 'missile1']);
-
 /**
  * Separate class for handling TIAVideo collisions.
  */
@@ -22,10 +20,7 @@ class TIACollision
 	 */
 	setCollision ( object1, object2 )
 	{
-		if ( validObjects.has (object1)  &&  validObjects.has (object2) )
-		{
-			this.collisions.link (object1, object2);
-		}
+		this.collisions.link (object1, object2);
 	}
 
 	/**
@@ -53,11 +48,6 @@ class TIACollision
 	 */
 	addObjectToPixel ( object )
 	{
-		if ( !validObjects.has (object) )
-		{
-			return;
-		}
-
 		const { values } = this.collisions;
 
 		// Optimization so we don't loop through each object every pixel.

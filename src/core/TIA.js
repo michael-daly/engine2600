@@ -19,6 +19,11 @@ class TIA
 		this.audio   = audio;
 		this.events  = new EventEmitter ();
 
+		this.lastRenderTime   = performance.now ();
+		this.renderTimeDelta  = 0;
+		this.deltaSum         = 0;
+		this.frameCount       = 0;
+
 		// Pre-bind the render method so we don't rebind it every single loop.
 		this._renderBound = this.render.bind (this);
 
@@ -47,6 +52,10 @@ class TIA
 		delete this.context;
 		delete this.video;
 		delete this.audio;
+		delete this.lastRenderTime;
+		delete this.renderTimeDelta;
+		delete this.deltaSum;
+		delete this.frameCount;
 		delete this._renderBound;
 		delete this._frameRequest;
 		delete this.isRunning;
@@ -66,7 +75,15 @@ class TIA
 
 		const { events, context, video } = this;
 
-		context.putImageData (video.render (), 0, 0);
+		context.putImageData (video.render (this.renderTimeDelta), 0, 0);
+
+		const now = performance.now ();
+
+		this.renderTimeDelta = now - this.lastRenderTime;
+		this.lastRenderTime  = now;
+
+		this.deltaSum += this.renderTimeDelta;
+		this.frameCount++;
 
 		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't rebind
 		// the method every single loop.

@@ -1,7 +1,6 @@
 import GridRow from '~/core/GridRow.js';
 
-import { getColor }    from '~/palettes/palettes.js';
-import { PIXEL_WIDTH } from '~/core/constants.js';
+import { getColor } from '~/palettes/palettes.js';
 
 import { PLAYER_WIDTH, DEF_PLAYER_COL, DEF_PLAYER_X } from '~/player/constants.js';
 

@@ -1,7 +1,4 @@
-import { PIXEL_WIDTH } from '~/core/constants.js';
-
-
-const TILE_WIDTH = 4 * PIXEL_WIDTH;
+const TILE_WIDTH = 8;
 
 // The playfields' width in tiles.
 const PF_WIDTH_TILES = 40;

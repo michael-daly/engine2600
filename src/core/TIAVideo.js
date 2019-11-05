@@ -22,10 +22,8 @@ class TIAVideo
 	 */
 	constructor ( width, height, palette = 'NTSC' )
 	{
-		const renderBuffer = new RenderBuffer (width, height);
-
 		this.palette           = palette;
-		this.renderBuffer      = renderBuffer;
+		this.renderBuffer      = new RenderBuffer (width, height);
 		this.events            = new EventEmitter ();
 		this.collision         = new TIACollision ();
 		this.playfield         = new Playfield ();

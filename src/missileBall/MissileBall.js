@@ -1,5 +1,3 @@
-import { PIXEL_WIDTH } from '~/core/constants.js';
-
 import
 {
 	VALID_WIDTHS,
@@ -45,7 +43,7 @@ class MissileBall
 
 	get drawWidth ()
 	{
-		return this.width * MB_MUL_WIDTH * PIXEL_WIDTH;
+		return this.width * MB_MUL_WIDTH;
 	}
 
 	set x ( x )

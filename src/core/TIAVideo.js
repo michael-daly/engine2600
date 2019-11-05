@@ -101,7 +101,7 @@ class TIAVideo
 	/**
 	 * @returns {ImageData}
 	 */
-	render ()
+	render ( delta )
 	{
 		const { renderBuffer, palette, events, objects, collision }     = this;
 		const { playfield, player0, player1, ball, missile0, missile1 } = this;
@@ -111,7 +111,7 @@ class TIAVideo
 
 		this.scanline = 0;
 
-		events.emit ('renderStart');
+		events.emit ('renderStart', delta);
 
 		// Mimic how TIA draws pixels, scanline-by-scanline...
 		for ( let scanline = 0;  scanline < renderBuffer.height;  scanline++ )
@@ -119,7 +119,7 @@ class TIAVideo
 			// Set the scanline property rather than directly modify it every time so it looks cleaner.
 			this.scanline = scanline;
 
-			events.emit ('scanline', scanline);
+			events.emit ('scanline', { scanline, delta });
 
 			this.pixel = 0;
 
@@ -170,7 +170,7 @@ class TIAVideo
 			}
 		}
 
-		events.emit ('renderEnd');
+		events.emit ('renderEnd', delta);
 
 		return renderBuffer.imageData;
 	}

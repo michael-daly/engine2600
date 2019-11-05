@@ -28,6 +28,17 @@ class Playfield
 	}
 
 	/**
+	 * Converts an X coordinate to a tile X coordinate.
+	 *
+	 * @param   {integer} coordX
+	 * @returns {integer}
+	 */
+	coordToTile ( coordX )
+	{
+		return Math.floor (coordX / TILE_WIDTH);
+	}
+
+	/**
 	 * @param   {integer} index
 	 * @returns {0|1}
 	 */
@@ -45,6 +56,28 @@ class Playfield
 	setTile ( index, bool )
 	{
 		this.tiles.setBlock (index, bool);
+	}
+
+	/**
+	 * Shortcut method that combines getTile() and coordToTile()
+	 *
+	 * @param   {integer} coordX
+	 * @returns {-1|0|1}
+	 */
+	getTileFromCoord ( coordX )
+	{
+		return this.getTile (this.coordToTile (coordX));
+	}
+
+	/**
+	 * Shortcut method that combines setTile() and coordToTile()
+	 *
+	 * @param {integer} coordX
+	 * @param {0|1}     bool
+	 */
+	setTileFromCoord ( coordX, bool )
+	{
+		this.setTile (this.coordToTile (coordX), bool);
 	}
 }
 

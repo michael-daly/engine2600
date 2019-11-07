@@ -123,7 +123,7 @@ class TIAVideo
 			const player0Color = player0.color;
 			const player1Color = player1.color;
 
-			const { tileColor, backgroundColor } = playfield;
+			const { tileColor } = playfield;
 
 			// ...pixel-by-pixel.
 			for ( let pixel = 0;  pixel < CANVAS_WIDTH;  pixel++ )

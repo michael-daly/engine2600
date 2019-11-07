@@ -8,6 +8,7 @@
   },
   "author": "",
   "license": "ISC",
+  "main": "dist/bundle.js",
   "dependencies": {
     "express": "^4.17.1",
     "has": "^1.0.3"

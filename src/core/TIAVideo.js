@@ -60,6 +60,7 @@ class TIAVideo
 		else if ( tile === 1 )
 		{
 			this._renderPixel (playfield.tileColor);
+			this.collision.addObjectToPixel (playfield);
 		}
 	}
 

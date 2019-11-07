@@ -15,29 +15,29 @@ class RenderBuffer
 	 *
 	 * @param {integer}   x
 	 * @param {integer}   y
-	 * @param {ColorRGBA} colorArray
+	 * @param {ColorRGBA} colorRGBA
 	 */
-	drawPixel ( x, y, colorArray )
+	drawPixel ( x, y, colorRGBA )
 	{
 		if ( x < 0  ||  y < 0  ||  x >= CANVAS_WIDTH  ||  y >= CANVAS_HEIGHT )
 		{
 			return;
 		}
 
-		setPixel (this.imageData, x, y, colorArray);
+		setPixel (this.imageData, x, y, colorRGBA);
 	}
 
 	/**
 	 * @param {integer}   x
 	 * @param {integer}   y
 	 * @param {integer}   width
-	 * @param {ColorRGBA} colorArray
+	 * @param {ColorRGBA} colorRGBA
 	 */
-	drawHorizontalLine ( x, y, width, colorArray )
+	drawHorizontalLine ( x, y, width, colorRGBA )
 	{
 		for ( let drawX = x;  drawX < x + width;  drawX++ )
 		{
-			this.drawPixel (drawX, y, colorArray);
+			this.drawPixel (drawX, y, colorRGBA);
 		}
 	}
 }

@@ -7,12 +7,18 @@ import SECAM from '~/palettes/SECAM.js';
 const palettes = Object.freeze ({ NTSC, PAL, SECAM });
 
 /**
+ * An integer array representing an RGBA color.
+ *
+ * @typedef {integer[]} ColorRGBA
+ */
+
+/**
  * Get an RGBA color array at an index in a specific palette.
  *
- * @param {string}  paletteName - Available palettes: NTSC, PAL, and SECAM.
- * @param {integer} colorIndex
+ * @param {"NTSC"|"PAL"|"SECAM"} paletteName
+ * @param {integer}              colorIndex
  *
- * @returns {integer[]|null} RGBA color array, or null if invalid color index/palette.
+ * @returns {ColorRGBA|null} RGBA color array, or null if invalid color index/palette.
  */
 const getColor = ( paletteName, colorIndex ) =>
 {
@@ -34,7 +40,7 @@ const getColor = ( paletteName, colorIndex ) =>
 /**
  * Get the max number of colors in a palette.
  *
- * @param {string} paletteName - Available palettes: NTSC, PAL, and SECAM.
+ * @param {"NTSC"|"PAL"|"SECAM"} paletteName
  *
  * @returns {integer}
  */

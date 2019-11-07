@@ -1,17 +1,13 @@
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from '~/core/constants.js';
+
 import { setPixel } from '~/utility/imageData.js';
 
 
 class RenderBuffer
 {
-	/**
-	 * @param {integer} width
-	 * @param {integer} height
-	 */
-	constructor ( width, height )
+	constructor ()
 	{
-		this.imageData = new ImageData (width, height);
-		this.width     = width;
-		this.height    = height;
+		this.imageData = new ImageData (CANVAS_WIDTH, CANVAS_HEIGHT);
 	}
 
 	/**
@@ -23,7 +19,7 @@ class RenderBuffer
 	 */
 	drawPixel ( x, y, colorArray )
 	{
-		if ( x < 0  ||  y < 0  ||  x >= this.width  ||  y >= this.height )
+		if ( x < 0  ||  y < 0  ||  x >= CANVAS_WIDTH  ||  y >= CANVAS_HEIGHT )
 		{
 			return;
 		}

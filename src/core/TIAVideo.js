@@ -5,9 +5,9 @@ import Playfield    from '~/playfield/Playfield.js';
 import Player       from '~/player/Player.js';
 import MissileBall  from '~/missileBall/MissileBall.js';
 
-import { getColor } from '~/palettes/palettes.js';
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from '~/core/constants.js';
 
-import { TILE_WIDTH } from '~/playfield/constants.js';
+import { getColor } from '~/palettes/palettes.js';
 
 
 /**
@@ -16,14 +16,12 @@ import { TILE_WIDTH } from '~/playfield/constants.js';
 class TIAVideo
 {
 	/**
-	 * @param {integer} width
-	 * @param {integer} height
-	 * @param {string}  palette
+	 * @param {string} palette
 	 */
-	constructor ( width, height, palette = 'NTSC' )
+	constructor ( palette = 'NTSC' )
 	{
 		this.palette           = palette;
-		this.renderBuffer      = new RenderBuffer (width, height);
+		this.renderBuffer      = new RenderBuffer ();
 		this.events            = new EventEmitter ();
 		this.collision         = new TIACollision ();
 		this.playfield         = new Playfield ();
@@ -39,7 +37,6 @@ class TIAVideo
 
 	/**
 	 * @param {integer} colorIndex
-	 *
 	 * @private
 	 */
 	_renderPixel ( colorIndex )
@@ -54,9 +51,7 @@ class TIAVideo
 	 */
 	_renderPlayfield ( playfield, renderBG = true )
 	{
-		const { pixel, scanline } = this;
-
-		const tile = playfield.getTileFromCoord (pixel);
+		const tile = playfield.getTileFromCoord (this.pixel);
 
 		if ( tile === 0  &&  renderBG )
 		{
@@ -103,18 +98,20 @@ class TIAVideo
 	 */
 	render ( delta )
 	{
-		const { renderBuffer, palette, events, objects, collision }     = this;
+		const { renderBuffer, events, collision } = this;
+
+		// Objects we're going to render.
 		const { playfield, player0, player1, ball, missile0, missile1 } = this;
 
 		// Fallback color if nothing gets drawn.
-		const baseColor = getColor (palette, 0);
+		const baseColor = getColor (this.palette, 0);
 
 		this.scanline = 0;
 
 		events.emit ('renderStart', delta);
 
 		// Mimic how TIA draws pixels, scanline-by-scanline...
-		for ( let scanline = 0;  scanline < renderBuffer.height;  scanline++ )
+		for ( let scanline = 0;  scanline < CANVAS_HEIGHT;  scanline++ )
 		{
 			// Set the scanline property rather than directly modify it every time so it looks cleaner.
 			this.scanline = scanline;
@@ -129,7 +126,7 @@ class TIAVideo
 			const { tileColor, backgroundColor } = playfield;
 
 			// ...pixel-by-pixel.
-			for ( let pixel = 0;  pixel < renderBuffer.width;  pixel++ )
+			for ( let pixel = 0;  pixel < CANVAS_WIDTH;  pixel++ )
 			{
 				this.pixel = pixel;
 

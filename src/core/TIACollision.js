@@ -15,8 +15,8 @@ class TIACollision
 	/**
 	 * Sets collision between two objects.
 	 *
-	 * @param {string} object1
-	 * @param {string} object2
+	 * @param {Playfield|Player|MissileBall} object1
+	 * @param {Playfield|Player|MissileBall} object2
 	 */
 	setCollision ( object1, object2 )
 	{
@@ -33,8 +33,8 @@ class TIACollision
 	}
 
 	/**
-	 * @param {string} object1
-	 * @param {string} object2
+	 * @param {Playfield|Player|MissileBall} object1
+	 * @param {Playfield|Player|MissileBall} object2
 	 */
 	checkCollision ( object1, object2 )
 	{
@@ -44,7 +44,7 @@ class TIACollision
 	/**
 	 * Adds object that's being drawn at the current pixel.
 	 *
-	 * @param {string} object
+	 * @param {Playfield|Player|MissileBall} object
 	 */
 	addObjectToPixel ( object )
 	{

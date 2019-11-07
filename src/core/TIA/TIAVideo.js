@@ -1,6 +1,6 @@
 import RenderBuffer from '~/core/RenderBuffer.js';
 import EventEmitter from '~/utility/classes/EventEmitter.js';
-import TIACollision from '~/core/TIACollision.js';
+import TIACollision from '~/TIA/TIACollision.js';
 import Playfield    from '~/playfield/Playfield.js';
 import Player       from '~/player/Player.js';
 import MissileBall  from '~/missileBall/MissileBall.js';
@@ -16,7 +16,7 @@ import { getColor } from '~/palettes/palettes.js';
 class TIAVideo
 {
 	/**
-	 * @param {string} palette
+	 * @param {"NTSC"|"PAL"|"SECAM"} [palette]
 	 */
 	constructor ( palette = 'NTSC' )
 	{

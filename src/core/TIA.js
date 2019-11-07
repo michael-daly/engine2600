@@ -73,9 +73,13 @@ class TIA
 			return;
 		}
 
-		const { events, context, video } = this;
+		/* Render TIAVideo and draw returned ImageData on the canvas. */
 
-		context.putImageData (video.render (this.renderTimeDelta), 0, 0);
+		const renderImage = this.video.render (this.renderTimeDelta);
+
+		this.context.putImageData (renderImage, 0, 0);
+
+		/* Deltas, frame counters, FPS, and performance. */
 
 		const now = performance.now ();
 

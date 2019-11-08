@@ -1,6 +1,8 @@
 const path    = require ('path');
 const webpack = require ('webpack');
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 
 module.exports =
 {
@@ -8,12 +10,13 @@ module.exports =
 
 	output:
 	{
-		filename: 'bundle.js',
-		path: path.join (__dirname + '/dist')
+		path:          path.join (__dirname + '/dist'),
+		filename:      'bundle.js',
+		library:       'engine2600',
+		libraryTarget: 'umd',
 	},
 
-	watch: true,
-	mode: 'development',
+	mode: isProduction ? 'production' : 'development',
 
 	resolve:
 	{
@@ -35,9 +38,9 @@ module.exports =
 		rules:
 		[
 			{
-				test: /\.jsx?$/,
+				test:    /\.jsx?$/,
 				exclude: /node_modules/,
-				loader: 'babel-loader',
+				loader:  'babel-loader',
 			}
 		]
 	}

@@ -37,24 +37,7 @@ const getColor = ( paletteName, colorIndex ) =>
 	return palette[colorIndex];
 };
 
-/**
- * Get the max number of colors in a palette.
- *
- * @param {"NTSC"|"PAL"|"SECAM"} paletteName
- *
- * @returns {integer}
- */
-const getMaxColors = ( paletteName ) =>
-{
-	if ( !has (palettes, paletteName) )
-	{
-		return -1;
-	}
 
-	return palettes[paletteName].length;
-};
-
-
-export { getColor, getMaxColors };
+export { getColor };
 
 export default palettes;

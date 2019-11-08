@@ -10,6 +10,9 @@ import
 from '~/missileBall/constants.js';
 
 
+/**
+ * Class for both the ball and missiles since they pretty much have the same functionality.
+ */
 class MissileBall
 {
 	/**
@@ -18,8 +21,10 @@ class MissileBall
 	 */
 	constructor ( x = DEF_MB_X, width = DEF_MB_WIDTH )
 	{
-		this._x      = x;
-		this._width  = width;
+		this._x     = x;
+		this._width = width;
+
+		// If false, this object will not be rendered.
 		this.enabled = false;
 	}
 
@@ -53,6 +58,7 @@ class MissileBall
 
 	set width ( width )
 	{
+		// There is only a fixed set of sizes that the ball/missiles are allowed to be.
 		if ( VALID_WIDTHS.indexOf (width) < 0 )
 		{
 			return;

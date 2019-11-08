@@ -22,9 +22,13 @@ class Playfield
 	 */
 	constructor ( backgroundColor = DEF_PF_BG_COL, tileColor = DEF_PF_TILE_COL )
 	{
-		this.tiles           = new GridRow (PF_WIDTH_TILES);
 		this.backgroundColor = backgroundColor;
 		this.tileColor       = tileColor;
+
+		// For the Atari 2600, there is only an image buffer for a single scanline, so if we want a
+		// playfield that's not just vertical stripes all the way down, we have to change the buffer
+		// manually each scanline.
+		this.tiles = new GridRow (PF_WIDTH_TILES);
 	}
 
 	/**

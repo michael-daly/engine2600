@@ -1,6 +1,11 @@
 import { createArray } from '~/utility/createArray.js';
 
 
+/**
+ * Shared class between playfield and players.
+ *
+ * Used for setting tiles for the playfield, and setting pixels for players.
+ */
 class GridRow
 {
 	/**
@@ -12,7 +17,7 @@ class GridRow
 	}
 
 	/**
-	 * @param {Function} callback - (index, tile)
+	 * @param {Function} callback - `(index, tile)`
 	 */
 	forEach ( callback )
 	{

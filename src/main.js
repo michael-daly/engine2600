@@ -31,12 +31,13 @@ const Engine2600 =
 		return new TIA (canvas, video, audio);
 	},
 
+	// Various useful constants that are also used internally by the engine.
 	constants:
 	{
 		CANVAS_WIDTH,
 		CANVAS_HEIGHT,
 		TILE_WIDTH,
-		PF_WIDTH_TILES
+		PF_WIDTH_TILES,
 	},
 };
 

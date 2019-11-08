@@ -11,7 +11,7 @@ import { getColor } from '~/palettes/palettes.js';
 
 
 /**
- * A class that mimics the behavior of the video portion of the TIA in the Atari 2600.
+ * A class that mimics the behavior of the video portion of the TIA.
  */
 class TIAVideo
 {
@@ -20,19 +20,66 @@ class TIAVideo
 	 */
 	constructor ( palette = 'NTSC' )
 	{
-		this.palette           = palette;
-		this.renderBuffer      = new RenderBuffer ();
-		this.events            = new EventEmitter ();
-		this.collision         = new TIACollision ();
-		this.playfield         = new Playfield ();
-		this.player0           = new Player ();
-		this.player1           = new Player ();
-		this.ball              = new MissileBall ();
-		this.missile0          = new MissileBall ();
-		this.missile1          = new MissileBall ();
+		// Color palette to render graphics with.
+		this.palette = palette;
+
+		// Used to draw graphics that will be put on a canvas.
+		this.renderBuffer = new RenderBuffer ();
+
+		/**
+		 * Events for hooking into the rendering process.
+		 *
+		 * Three events are available:
+		 *     "renderStart" - Called at the beginning, before any rendering occurs.
+		 *     "scanline"    - Called before rendering each scanline.
+		 *     "renderEnd"   - Called after the rendering process is over.
+		 */
+		this.events = new EventEmitter ();
+
+		/**
+		 * Used for checking collisions between objects (players, playfield, missiles, and ball).
+		 *
+		 * To check collision between two objects, use `checkCollision(object1, object2)`
+		 *
+		 * Like the actual Atari 2600, collisions have to be reset manually with `clearCollisions()`
+		 */
+		this.collision = new TIACollision ();
+
+		/**
+		 * Game Objects
+		 *
+		 * The Atari 2600 has a total of five objects, plus a playfield:
+		 *    - Player0
+		 *    - Player1
+		 *    - Missile0
+		 *    - Missile1
+		 *    - Ball
+		 *
+		 * These can be repositioned per-scanline for more detail, which was *heavily* abused by pretty
+		 * much every game made for the system, as it was extremely limited in its capabilities.
+		 */
+
+		/* @see Playfield */
+
+		this.playfield = new Playfield ();
+
+		/* @see Player */
+
+		this.player0 = new Player ();
+		this.player1 = new Player ();
+
+		/* @see MissileBall */
+
+		this.ball     = new MissileBall ();
+		this.missile0 = new MissileBall ();
+		this.missile1 = new MissileBall ();
+
+		// If true, playfield tiles and the ball will be drawn over players and missiles.
 		this.drawPFOverPlayers = false;
-		this.scanline          = 0;
-		this.pixel             = 0;
+
+		// The current scanline and pixel we're drawing.  Mostly for internal use.
+		this.scanline = 0;
+		this.pixel    = 0;
 	}
 
 	/**
@@ -47,6 +94,7 @@ class TIAVideo
 	/**
 	 * @param {Playfield} playfield
 	 * @param {boolean}   [renderBG]
+	 *
 	 * @private
 	 */
 	_renderPlayfield ( playfield, renderBG = true )
@@ -65,7 +113,7 @@ class TIAVideo
 	}
 
 	/**
-	 * @param {Player) player
+	 * @param {Player} player
 	 * @private
 	 */
 	_renderPlayer ( player )
@@ -111,28 +159,30 @@ class TIAVideo
 
 		events.emit ('renderStart', delta);
 
-		// Mimic how TIA draws pixels, scanline-by-scanline...
+		// Mimic how the actual TIA runs, scanline-by-scanline...
 		for ( let scanline = 0;  scanline < CANVAS_HEIGHT;  scanline++ )
 		{
-			// Set the scanline property rather than directly modify it every time so it looks cleaner.
+			// Set the scanline property rather than directly modify it every time.
 			this.scanline = scanline;
 
 			events.emit ('scanline', { scanline, delta });
-
-			this.pixel = 0;
 
 			const player0Color = player0.color;
 			const player1Color = player1.color;
 
 			const { tileColor } = playfield;
 
+			this.pixel = 0;
+
 			// ...pixel-by-pixel.
 			for ( let pixel = 0;  pixel < CANVAS_WIDTH;  pixel++ )
 			{
 				this.pixel = pixel;
 
+				// Draw fallback color.
 				renderBuffer.drawPixel (pixel, scanline, baseColor);
 
+				// Initial playfield render.
 				this._renderPlayfield (playfield);
 
 				/* Render ball if we're not drawing it over the player. */
@@ -142,17 +192,17 @@ class TIAVideo
 					this._renderMissileBall (ball, tileColor);
 				}
 
-				/* Render player1. */
+				/* Render player1/missile1. */
 
 				this._renderPlayer (player1);
 				this._renderMissileBall (missile1, player1Color);
 
-				/* Render player0. */
+				/* Render player0/missile0. */
 
 				this._renderPlayer (player0);
 				this._renderMissileBall (missile0, player0Color);
 
-				/* Render ball if we are drawing it over the player. */
+				/* Render playfield tile and ball if we are drawing them over the player. */
 
 				if ( this.drawPFOverPlayers )
 				{
@@ -161,7 +211,7 @@ class TIAVideo
 				}
 
 				/* Check collisions for all objects at this pixel, then reset pixel object data to
-				   prepare for next pixel check. */
+				   prepare for the next pixel check. */
 
 				collision.setPixelCollisions ();
 				collision.clearPixelObjects ();

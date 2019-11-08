@@ -5,7 +5,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '~/core/constants.js';
  * Creates a canvas and optionally appends it to an element.
  *
  * @param {string} [elementID] - The ID of the element we want to append our canvas to.
- * @param {number} [scale]     - How much to scale up the fixed-resolution (320x226) canvas.
+ * @param {number} [scale]     - How much to scale up the fixed-resolution (160x192) canvas.
  *
  * @returns {HTMLCanvasElement}
  */

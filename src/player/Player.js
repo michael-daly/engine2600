@@ -15,8 +15,11 @@ class Player
 	{
 		this._x = x;
 
+		this.color = color;
+
+		// For the Atari 2600, there is only an image buffer for a single scanline, so if we want
+		// to draw a sprite, we have to change the buffer manually each scanline.
 		this.graphics = new GridRow (PLAYER_WIDTH);
-		this.color    = color;
 	}
 
 	/**

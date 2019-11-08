@@ -19,10 +19,10 @@ class TIA
 		this.audio   = audio;
 		this.events  = new EventEmitter ();
 
-		this.lastRenderTime   = performance.now ();
-		this.renderTimeDelta  = 0;
-		this.deltaSum         = 0;
-		this.frameCount       = 0;
+		this.lastRenderTime  = performance.now ();
+		this.renderTimeDelta = 0;
+		this.deltaSum        = 0;
+		this.frameCount      = 0;
 
 		// Pre-bind the render method so we don't rebind it every single loop.
 		this._renderBound = this.render.bind (this);

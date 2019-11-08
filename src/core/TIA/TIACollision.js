@@ -8,33 +8,50 @@ class TIACollision
 {
 	constructor ()
 	{
+		/**
+		 * Array for storing all the objects that are at the current pixel.
+		 *
+		 * For each pixel on the screen, all objects that are being drawn get added to this array, then
+		 * `setPixelCollisions()` is called to set collisions between all objects at the current pixel.
+		 *
+		 * The array is then cleared with `clearPixelObjects()` and the process restarts.
+		 */
 		this.objectsAtPixel = [];
-		this.collisions     = new ValueLinker ();
+
+		/**
+		 * Used for storing all collisions between objects.
+		 *
+		 * Use `checkCollision(object1, object2)` to check collisions between two objects.
+		 *
+		 * Like the actual Atari 2600, collisions must be cleared manually using `clearCollisions()`
+		 */
+		this.collisions = new ValueLinker ();
 	}
 
 	/**
-	 * Sets collision between two objects.
-	 *
 	 * @param {Playfield|Player|MissileBall} object1
 	 * @param {Playfield|Player|MissileBall} object2
+	 *
+	 * @private
 	 */
-	setCollision ( object1, object2 )
+	_setCollision ( object1, object2 )
 	{
 		this.collisions.link (object1, object2);
 	}
 
 	/**
-	 * Clear all collisions and objects at the pixel.
+	 * Clears collisions between all objects.
 	 */
 	clearCollisions ()
 	{
-		this.objectsAtPixel = [];
 		this.collisions.clear ();
 	}
 
 	/**
 	 * @param {Playfield|Player|MissileBall} object1
 	 * @param {Playfield|Player|MissileBall} object2
+	 *
+	 * @returns {boolean}
 	 */
 	checkCollision ( object1, object2 )
 	{
@@ -42,7 +59,7 @@ class TIACollision
 	}
 
 	/**
-	 * Adds object that's being drawn at the current pixel.
+	 * Adds object to `objectsAtPixels` array to indicate it's being drawn at the current pixel.
 	 *
 	 * @param {Playfield|Player|MissileBall} object
 	 */
@@ -50,7 +67,7 @@ class TIACollision
 	{
 		const { values } = this.collisions;
 
-		// Optimization so we don't loop through each object every pixel.
+		// Minor optimization if all other objects are already colliding with this object.
 		if ( values.has (object)  &&  values.get (object).size >= 5 )
 		{
 			return;
@@ -60,7 +77,7 @@ class TIACollision
 	}
 
 	/**
-	 * Clear all objects at the pixel.
+	 * Clears all the objects at the current pixel.
 	 */
 	clearPixelObjects ()
 	{
@@ -68,7 +85,7 @@ class TIACollision
 	}
 
 	/**
-	 * Goes through each object being drawn at the current pixel and sets collisions between them.
+	 * Sets collisions between all objects being drawn at the current pixel.
 	 */
 	setPixelCollisions ()
 	{
@@ -83,9 +100,10 @@ class TIACollision
 			{
 				const object2 = objectsAtPixel[j];
 
+				// An object can't collide with itself, obviously.
 				if ( object1 !== object2 )
 				{
-					this.setCollision (object1, object2);
+					this._setCollision (object1, object2);
 				}
 			}
 		}

@@ -16,7 +16,7 @@ import { TILE_WIDTH, PF_WIDTH_TILES } from '~/playfield/constants.js';
 const Engine2600 =
 {
 	/**
-	 * Creates an engine instance, creating a canvas and appending it to a parent element.
+	 * Creates a TIA instance, creating a canvas and appending it to a parent element.
 	 *
 	 * @param {string}               parentID      - The ID of the element we want to append our canvas to.
 	 * @param {number}               [canvasScale] - How much to scale up/down our canvas element.
@@ -24,7 +24,7 @@ const Engine2600 =
 	 *
 	 * @returns {TIA} Our engine instance.
 	 */
-	createInstance ( parentID, canvasScale = 3.0, palette = 'NTSC' )
+	createTIA ( parentID, canvasScale = 3.0, palette = 'NTSC' )
 	{
 		const canvas = createCanvas (parentID, canvasScale);
 		const video  = new TIAVideo (palette);

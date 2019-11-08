@@ -1,13 +1,9 @@
-const TICK_RATE = 1000 / 60;
-
 const CANVAS_WIDTH  = 160;
 const CANVAS_HEIGHT = 192;
 
 
 export
 {
-	TICK_RATE,
-
 	CANVAS_WIDTH,
 	CANVAS_HEIGHT,
 };

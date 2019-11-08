@@ -23,7 +23,7 @@ class TIACollision
 		 *
 		 * Use `checkCollision(object1, object2)` to check collisions between two objects.
 		 *
-		 * Like the actual Atari 2600, collisions must be cleared manually using `clearCollisions()`
+		 * Like the actual Atari 2600, collisions must be reset manually using `clearCollisions()`
 		 */
 		this.collisions = new ValueLinker ();
 	}

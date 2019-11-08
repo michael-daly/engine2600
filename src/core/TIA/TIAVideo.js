@@ -16,14 +16,14 @@ import { getColor } from '~/palettes/palettes.js';
 class TIAVideo
 {
 	/**
-	 * @param {"NTSC"|"PAL"|"SECAM"} [palette]
+	 * @param {"NTSC"|"PAL"|"SECAM"} [palette] - The color palette we're going to draw graphics with.
 	 */
 	constructor ( palette = 'NTSC' )
 	{
-		// Color palette to render graphics with.
+		// The color palette we're going to draw graphics with.
 		this.palette = palette;
 
-		// Used to draw graphics that will be put on a canvas.
+		// Used to draw the graphics that will be put on a canvas.
 		this.renderBuffer = new RenderBuffer ();
 
 		/**
@@ -143,6 +143,10 @@ class TIAVideo
 	}
 
 	/**
+	 * The main render function -- Mimics how the video portion of the actual TIA worked.
+	 *
+	 * @param {number} delta - Time difference between now and the last render time.
+	 *
 	 * @returns {ImageData}
 	 */
 	render ( delta )

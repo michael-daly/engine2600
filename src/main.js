@@ -1,6 +1,7 @@
 import TIA      from '~/TIA/TIA.js';
 import TIAVideo from '~/TIA/TIAVideo.js';
 
+import deepFreeze   from '~/utility/deepFreeze.js';
 import createCanvas from '~/utility/createCanvas.js';
 
 import { CANVAS_WIDTH, CANVAS_HEIGHT, NUM_COLORS } from '~/core/constants.js';
@@ -22,7 +23,7 @@ const Engine2600 =
 	 * @param {number}               [canvasScale] - How much to scale up/down our canvas element.
 	 * @param {"NTSC"|"PAL"|"SECAM"} [palette]     - Which color palette to use.
 	 *
-	 * @returns {TIA} Our engine instance.
+	 * @returns {TIA}
 	 */
 	createTIA ( parentID, canvasScale = 3.0, palette = 'NTSC' )
 	{
@@ -47,4 +48,4 @@ const Engine2600 =
 };
 
 
-export default Object.freeze (Engine2600);
+export default deepFreeze (Engine2600);

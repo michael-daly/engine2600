@@ -1,4 +1,4 @@
-const TILE_WIDTH = 8;
+const TILE_WIDTH = 4;
 
 // The playfields' width in tiles.
 const PF_WIDTH_TILES = 40;

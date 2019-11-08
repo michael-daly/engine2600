@@ -1,3 +1,6 @@
+import has from 'has';
+
+
 /**
  * A data structure for storing multiple values in the same key.  A map of sets, if you will.
  */
@@ -5,7 +8,7 @@ class SetMap
 {
 	constructor ()
 	{
-		this.map = new Map ();
+		this.map = {};
 	}
 
 	/**
@@ -18,12 +21,12 @@ class SetMap
 	{
 		const { map } = this;
 
-		if ( !map.has (key) )
+		if ( !has (map, key) )
 		{
-			map.set (key, new Set ());
+			map[key] = new Set ();
 		}
 
-		map.get (key).add (value);
+		map[key].add (value);
 	}
 
 	/**
@@ -37,12 +40,12 @@ class SetMap
 	{
 		const { map } = this;
 
-		if ( !map.has (key) )
+		if ( !has (map, key) )
 		{
 			return;
 		}
 
-		const set = map.get (key);
+		const set = map[key];
 
 		// Remove all values if no value specified.
 		if ( arguments.length === 1 )
@@ -57,7 +60,7 @@ class SetMap
 		// If there's nothing in the set, we don't need it anymore so just remove it.
 		if ( set.size <= 0 )
 		{
-			map.delete (key);
+			delete map[key];
 		}
 	}
 
@@ -72,9 +75,9 @@ class SetMap
 	{
 		const { map } = this;
 
-		if ( map.has (key) )
+		if ( has (map, key) )
 		{
-			return map.get (key);
+			return map[key];
 		}
 
 		return null;
@@ -96,10 +99,10 @@ class SetMap
 		// If no value specified, just check if there's anything mapped to the key at all.
 		if ( arguments.length === 1 )
 		{
-			return map.has (key);
+			return has (map, key);
 		}
 
-		return map.has (key)  &&  map.get (key).has (value);
+		return has (map, key)  &&  map[key].has (value);
 	}
 
 	/**
@@ -109,12 +112,12 @@ class SetMap
 	{
 		const { map } = this;
 
-		for ( let [key, set] of map )
+		for ( let key in map )
 		{
-			set.clear ();
+			map[key].clear ();
 		}
 
-		map.clear ();
+		this.map = {};
 	}
 
 	/**
@@ -127,12 +130,12 @@ class SetMap
 	{
 		const { map } = this;
 
-		if ( !map.has (key) )
+		if ( !has (map, key) )
 		{
 			return;
 		}
 
-		const set = map.get (key);
+		const set = map[key];
 
 		for ( let value of set )
 		{

@@ -3,8 +3,10 @@ import TIAVideo from '~/TIA/TIAVideo.js';
 
 import createCanvas from '~/utility/createCanvas.js';
 
-import { CANVAS_WIDTH, CANVAS_HEIGHT } from '~/core/constants.js';
-import { TILE_WIDTH, PF_WIDTH_TILES }  from '~/playfield/constants.js'; 
+import { CANVAS_WIDTH, CANVAS_HEIGHT, NUM_COLORS } from '~/core/constants.js';
+
+import { TILE_WIDTH, PF_WIDTH_TILES } from '~/playfield/constants.js';
+
 
 /**
  * Engine2600
@@ -36,6 +38,9 @@ const Engine2600 =
 	{
 		CANVAS_WIDTH,
 		CANVAS_HEIGHT,
+
+		NUM_COLORS,
+
 		TILE_WIDTH,
 		PF_WIDTH_TILES,
 	},

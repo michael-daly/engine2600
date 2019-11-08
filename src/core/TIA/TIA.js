@@ -1,3 +1,6 @@
+import TIAInput from '~/TIA/TIAInput.js';
+
+
 /**
  * Television Interface Adaptor -- Main app class.
  */
@@ -14,6 +17,8 @@ class TIA
 		this.context = canvas.getContext ('2d');
 		this.video   = video;
 		this.audio   = audio;
+		this.input0  = new TIAInput ();
+		this.input1  = new TIAInput ();
 
 		this.lastRenderTime  = performance.now ();
 		this.renderTimeDelta = 0;
@@ -46,6 +51,8 @@ class TIA
 		delete this.context;
 		delete this.video;
 		delete this.audio;
+		delete this.input0;
+		delete this.input1;
 		delete this.lastRenderTime;
 		delete this.renderTimeDelta;
 		delete this.deltaSum;

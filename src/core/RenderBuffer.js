@@ -3,6 +3,9 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '~/core/constants.js';
 import { setPixel } from '~/utility/imageData.js';
 
 
+/**
+ * Used by the TIAVideo class for drawing pixels and storing image data.
+ */
 class RenderBuffer
 {
 	constructor ()
@@ -25,20 +28,6 @@ class RenderBuffer
 		}
 
 		setPixel (this.imageData, x, y, colorRGBA);
-	}
-
-	/**
-	 * @param {integer}   x
-	 * @param {integer}   y
-	 * @param {integer}   width
-	 * @param {ColorRGBA} colorRGBA
-	 */
-	drawHorizontalLine ( x, y, width, colorRGBA )
-	{
-		for ( let drawX = x;  drawX < x + width;  drawX++ )
-		{
-			this.drawPixel (drawX, y, colorRGBA);
-		}
 	}
 }
 

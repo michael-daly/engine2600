@@ -66,6 +66,3 @@ typings/
 
 # Distribution folder
 dist/*
-
-# Main test file
-src/main.js

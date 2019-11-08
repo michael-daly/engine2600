@@ -1,6 +1,3 @@
-import EventEmitter from '~/utility/classes/EventEmitter.js';
-
-
 /**
  * Television Interface Adaptor -- Main app class.
  */
@@ -17,7 +14,6 @@ class TIA
 		this.context = canvas.getContext ('2d');
 		this.video   = video;
 		this.audio   = audio;
-		this.events  = new EventEmitter ();
 
 		this.lastRenderTime  = performance.now ();
 		this.renderTimeDelta = 0;
@@ -45,9 +41,7 @@ class TIA
 		cancelAnimationFrame (this._frameRequest);
 
 		this.canvas.remove ();
-		this.events.clear ();
 
-		delete this.events;
 		delete this.canvas;
 		delete this.context;
 		delete this.video;
@@ -79,7 +73,7 @@ class TIA
 
 		this.context.putImageData (renderImage, 0, 0);
 
-		/* Deltas, frame counters, FPS, and performance. */
+		/* Rendering time delta, frame count, and performance. */
 
 		const now = performance.now ();
 
@@ -89,8 +83,8 @@ class TIA
 		this.deltaSum += this.renderTimeDelta;
 		this.frameCount++;
 
-		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't rebind
-		// the method every single loop.
+		// Use the pre-bound render method so we don't lose the `this` binding, and so we don't
+		// rebind the method every single loop.
 		this._frameRequest = requestAnimationFrame (this._renderBound);
 	}
 }

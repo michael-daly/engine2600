@@ -31,8 +31,8 @@ class ValueLinker
 	 */
 	unlink ( value1, value2 )
 	{
-		this.values.delete (value1, value2);
-		this.values.delete (value2, value1);
+		this.values.remove (value1, value2);
+		this.values.remove (value2, value1);
 	}
 
 	/**

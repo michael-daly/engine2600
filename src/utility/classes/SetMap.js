@@ -11,8 +11,8 @@ class SetMap
 	/**
 	 * Adds a value to the key.
 	 *
-	 * @param {string} key   - The key to add a value to.
-	 * @param {*}      value - The value we want to add.
+	 * @param {string} key
+	 * @param {*}      value
 	 */
 	add ( key, value )
 	{
@@ -27,13 +27,13 @@ class SetMap
 	}
 
 	/**
-	 * Deletes a value from a key, or, alternatively, deletes all values at a key.
+	 * Removes a value from a key, or alternatively, deletes all values at a key.
 	 *
 	 * @param {string} key     - The key we want to delete a value/values from.
 	 * @param {*}      [value] - The value we want to remove.  If not specified, all values mapped
 	 *                           to the key will be removed.
 	 */
-	delete ( key, value )
+	remove ( key, value )
 	{
 		const { map } = this;
 
@@ -44,6 +44,7 @@ class SetMap
 
 		const set = map.get (key);
 
+		// Remove all values if no value specified.
 		if ( arguments.length === 1 )
 		{
 			set.clear ();
@@ -51,9 +52,9 @@ class SetMap
 		else
 		{
 			set.delete (value);
-
 		}
 
+		// If there's nothing in the set, we don't need it anymore so just remove it.
 		if ( set.size <= 0 )
 		{
 			map.delete (key);
@@ -65,7 +66,7 @@ class SetMap
 	 *
 	 * @param {string} key
 	 *
-	 * @returns {Set|null} The Set of values at the key, or null if there are no values.
+	 * @returns {Set|null} The set of values at the key, or null if there are no values.
 	 */
 	get ( key )
 	{
@@ -92,6 +93,7 @@ class SetMap
 	{
 		const { map } = this;
 
+		// If no value specified, just check if there's anything mapped to the key at all.
 		if ( arguments.length === 1 )
 		{
 			return map.has (key);

@@ -26,6 +26,22 @@ class TIACollision
 		 * Like the actual Atari 2600, collisions must be reset manually using `clearCollisions()`
 		 */
 		this.collisions = new ValueLinker ();
+
+		// If this is true, this instance has been disposed of, so don't try to use it.
+		this.isDeleted = false;
+	}
+
+	/**
+	 * Deletes all properties, clears all collisions, and sets isDeleted to true.
+	 */
+	delete ()
+	{
+		this.collisions.clear ();
+
+		delete this.objectsAtPixel;
+		delete this.collisions;
+
+		this.isDeleted = true;
 	}
 
 	/**

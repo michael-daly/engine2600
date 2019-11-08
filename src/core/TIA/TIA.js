@@ -47,6 +47,10 @@ class TIA
 
 		this.canvas.remove ();
 
+		this.video.delete ();
+		this.input0.delete ();
+		this.input1.delete ();
+
 		delete this.canvas;
 		delete this.context;
 		delete this.video;

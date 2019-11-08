@@ -80,6 +80,34 @@ class TIAVideo
 		// The current scanline and pixel we're drawing.  Mostly for internal use.
 		this.scanline = 0;
 		this.pixel    = 0;
+
+		// If this is true, this instance has been disposed of, so don't try to use it.
+		this.isDeleted = false;
+	}
+
+	/**
+	 * Deletes all properties, clears all events, and sets isDeleted to true.
+	 */
+	delete ()
+	{
+		this.events.clear ();
+		this.collision.delete ();
+
+		delete this.palette;
+		delete this.renderBuffer;
+		delete this.events;
+		delete this.collision;
+		delete this.playfield;
+		delete this.player0;
+		delete this.player1;
+		delete this.ball;
+		delete this.missile0;
+		delete this.missile1;
+		delete this.drawPFOverPlayers;
+		delete this.scanline;
+		delete this.pixel;
+
+		this.isDeleted = true;
 	}
 
 	/**

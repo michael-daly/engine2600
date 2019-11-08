@@ -5,6 +5,13 @@ const validActions = new Set (['up', 'down', 'left', 'right', 'fire']);
 
 /**
  * Separate class for handling key input.
+ *
+ * To bind a key to an action, use `bindKey(key, action)`
+ *
+ * To unbind a key, use `unbindKey(key)` or use `unbindAction(action)`
+ * To unbind all keys, use `unbindAll()`
+ *
+ * To check if an action is being activated, use `checkAction(action)`
  */
 class TIAInput
 {
@@ -18,15 +25,44 @@ class TIAInput
 		this._actionToKey = {};
 		this._keysDown    = new Set ();
 
-		target.addEventListener ('keydown', event =>
+		/* Bind input event listeners and store them in a property so we can remove them later if
+		   we need to. */
+
+		const onKeyDown = function ( event )
 		{
 			this._keysDown.add (event.key);
-		});
+		};
 
-		target.addEventListener ('keyup', event =>
+		const onKeyUp = function ( event )
 		{
 			this._keysDown.delete (event.key);
-		});
+		};
+
+		this._onKeyDown = onKeyDown.bind (this);
+		this._onKeyUp   = onKeyUp.bind (this);
+
+		target.addEventListener ('keydown', this._onKeyDown);
+		target.addEventListener ('keyup', this._onKeyUp);
+
+		// If this is true, this instance has been disposed of, so don't try to use it.
+		this.isDeleted = false;
+	}
+
+	delete ()
+	{
+		this._keysDown.clear ();
+
+		this._target.removeEventListener ('keydown', this._onKeyDown);
+		this._target.removeEventListener ('keyup', this._onKeyUp);
+
+		delete this._target;
+		delete this._keyToAction;
+		delete this._actionToKey;
+		delete this._keysDown;
+		delete this._onKeyDown;
+		delete this._onKeyUp;
+
+		this.isDeleted = true;
 	}
 
 	/**
@@ -68,20 +104,20 @@ class TIAInput
 			return;
 		}
 
-		const action = this._keyToAction[key];
+		const action = this.getAction (key);
 
 		delete this._keyToAction[key];
 		delete this._actionToKey[action];
 	}
 
 	/**
-	 * Unbinds an action from its key.
+	 * Unbinds the key bound to this action.
 	 *
 	 * @param {string} action
 	 */
 	unbindAction ( action )
 	{
-		this.unbindKey (this._actionToKey[action]);
+		this.unbindKey (this.getKey (action));
 	}
 
 	/**
@@ -106,7 +142,7 @@ class TIAInput
 			return false;
 		}
 
-		return this._keysDown.has (this._actionToKey[action]);
+		return this._keysDown.has (this.getKey (action));
 	}
 
 	/**

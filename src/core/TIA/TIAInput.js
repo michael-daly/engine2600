@@ -20,10 +20,11 @@ class TIAInput
 	 */
 	constructor ( target = document )
 	{
-		this._target      = target;
-		this._keyToAction = {};
-		this._actionToKey = {};
-		this._keysDown    = new Set ();
+		this._target         = target;
+		this._keyToAction    = {};
+		this._actionToKey    = {};
+		this._keysDown       = new Set ();
+		this._blockedActions = new Set ();
 
 		/* Bind input event listeners and store them in a property so we can remove them later if
 		   we need to. */
@@ -51,6 +52,7 @@ class TIAInput
 	delete ()
 	{
 		this._keysDown.clear ();
+		this._blockedActions.clear ();
 
 		this._target.removeEventListener ('keydown', this._onKeyDown);
 		this._target.removeEventListener ('keyup', this._onKeyUp);
@@ -59,6 +61,7 @@ class TIAInput
 		delete this._keyToAction;
 		delete this._actionToKey;
 		delete this._keysDown;
+		delete this._blockedActions;
 		delete this._onKeyDown;
 		delete this._onKeyUp;
 
@@ -130,6 +133,44 @@ class TIAInput
 	}
 
 	/**
+	 * Blocks an action from being activated.
+	 *
+	 * @param {string} action
+	 */
+
+	blockAction ( action )
+	{
+		if ( validActions.has (action) )
+		{
+			this._blockedActions.add (action);
+		}
+	}
+
+	/**
+	 * Unblocks an action from being activated.
+	 *
+	 * @param {string} action
+	 */
+	unblockAction ( action )
+	{
+		if ( validActions.has (action) )
+		{
+			this._blockedActions.delete (action);
+		}
+	}
+
+	/**
+	 * Checks if an action is blocked from being activated.
+	 *
+	 * @param   {string} action
+	 * @returns {boolean}
+	 */
+	isActionBlocked ( action )
+	{
+		return this._blockedActions.has (action);
+	}
+
+	/**
 	 * Checks if an action is being activated.
 	 *
 	 * @param   {string} action
@@ -138,6 +179,11 @@ class TIAInput
 	checkAction ( action )
 	{
 		if ( !validActions.has (action)  ||  !this.isActionBound (action) )
+		{
+			return false;
+		}
+
+		if ( this.isActionBlocked (action) )
 		{
 			return false;
 		}

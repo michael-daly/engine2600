@@ -19,7 +19,7 @@ class Player
 
 		// For the Atari 2600, there is only an image buffer for a single scanline, so if we want
 		// to draw a sprite, we have to change the buffer manually each scanline.
-		this.graphics = new GridRow (PLAYER_WIDTH);
+		this.pixels = new GridRow (PLAYER_WIDTH);
 	}
 
 	/**
@@ -28,7 +28,7 @@ class Player
 	 */
 	getPixel ( index )
 	{
-		return this.graphics.getBlock (index);
+		return this.pixels.getBlock (index);
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Player
 	 */
 	setPixel ( index, bool )
 	{
-		this.graphics.setBlock (index, bool);
+		this.pixels.setBlock (index, bool);
 	}
 
 	/**
